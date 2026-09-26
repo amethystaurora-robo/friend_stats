@@ -177,6 +177,7 @@ function displayAvatars() {
     return;
   }
 
+
 function displayPointsFields() {
   if (avatars.length === 0) {
     pointsFields.innerHTML = "<p>Create an avatar first.</p>";
