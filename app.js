@@ -23,49 +23,89 @@ function createAvatarSVG({
   accessory = "none",
   backgroundColor = "#e8eef7"
 }) {
-  let hair = "";
+let hair = "";
 
-  if (hairStyle === "short") {
-    hair = `
-      <path
-        d="M55 62 Q60 25 100 25 Q140 25 145 62
-           Q125 45 100 48 Q75 45 55 62"
-        fill="${hairColor}"
-      />
-    `;
-  }
+if (hairStyle === "short") {
+  hair = `
+    <path
+      d="
+        M45 76
+        Q45 48 58 38
+        Q75 23 100 23
+        Q125 23 142 38
+        Q155 48 155 76
+        Q143 61 130 56
+        Q115 49 100 49
+        Q85 49 70 56
+        Q57 61 45 76
+        Z
+      "
+      fill="${hairColor}"
+      stroke="#222"
+      stroke-width="2"
+    />
+  `;
+}
 
-  if (hairStyle === "spiky") {
-    hair = `
-      <path
-        d="M55 62 L58 35 L72 42 L82 20 L94 39
-           L108 18 L116 40 L138 27 L145 62
-           Q120 45 100 48 Q75 45 55 62"
-        fill="${hairColor}"
-      />
-    `;
-  }
+if (hairStyle === "long") {
+  hair = `
+    <path
+      d="
+        M43 82
+        Q40 48 58 35
+        Q75 22 100 22
+        Q125 22 142 35
+        Q160 48 157 82
+        L151 145
+        Q140 158 128 145
+        L118 126
+        Q109 132 100 132
+        Q91 132 82 126
+        L72 145
+        Q60 158 49 145
+        Z
+      "
+      fill="${hairColor}"
+      stroke="#222"
+      stroke-width="2"
+    />
+  `;
+}
 
-  if (hairStyle === "long") {
-    hair = `
-      <path
-        d="M52 70 Q50 25 100 25 Q150 25 148 70
-           L135 125 L118 110 L100 120 L82 110
-           L65 125 Z"
-        fill="${hairColor}"
-      />
-    `;
-  }
 
   let accessoryGraphic = "";
 
-  if (accessory === "glasses") {
-    accessoryGraphic = `
-      <circle cx="78" cy="72" r="13" fill="none" stroke="#222" stroke-width="4"/>
-      <circle cx="122" cy="72" r="13" fill="none" stroke="#222" stroke-width="4"/>
-      <line x1="91" y1="72" x2="109" y2="72" stroke="#222" stroke-width="4"/>
-    `;
-  }
+if (accessory === "glasses") {
+  accessoryGraphic = `
+    <circle
+      cx="78"
+      cy="88"
+      r="13"
+      fill="none"
+      stroke="#222"
+      stroke-width="4"
+    />
+
+    <circle
+      cx="122"
+      cy="88"
+      r="13"
+      fill="none"
+      stroke="#222"
+      stroke-width="4"
+    />
+
+    <line
+      x1="91"
+      y1="88"
+      x2="109"
+      y2="88"
+      stroke="#222"
+      stroke-width="4"
+    />
+  `;
+}
+
 
   if (accessory === "headband") {
     accessoryGraphic = `
@@ -112,11 +152,12 @@ function createAvatarSVG({
 
       ${hair}
 
-      <circle cx="78" cy="72" r="5" fill="${eyeColor}"/>
-      <circle cx="122" cy="72" r="5" fill="${eyeColor}"/>
-
+      <circle cx="78" cy="88" r="5" fill="${eyeColor}"/>
+      <circle cx="122" cy="88" r="5" fill="${eyeColor}"/>
+      
       <path
-        d="M82 102 Q100 114 118 102"
+        d="M82 122 Q100 134 118 122"
+
         fill="none"
         stroke="#222"
         stroke-width="4"
