@@ -136,6 +136,7 @@ const avatarChoices = {
   accessory: "none"
 };
 
+
 function getAvatarOptions() {
   return {
     ...avatarChoices
