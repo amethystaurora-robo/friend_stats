@@ -190,19 +190,6 @@ updateAvatarPreview();
 
 
 
-function updateAvatarPreview() {
-  avatarPreview.innerHTML = createAvatarSVG(getAvatarOptions());
-}
-
-document.querySelectorAll(
-  "#body-color, #hair-color, #hair-style, #accessory, #background-color"
-).forEach(input => {
-  input.addEventListener("input", updateAvatarPreview);
-});
-
-updateAvatarPreview();
-
-
 function saveData() {
   localStorage.setItem("avatars", JSON.stringify(avatars));
   localStorage.setItem("entries", JSON.stringify(entries));
