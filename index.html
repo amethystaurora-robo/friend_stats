@@ -18,26 +18,58 @@
   </header>
 
   <main>
-    <section class="panel">
-      <h2>Create an avatar</h2>
+<section class="panel">
+  <h2>Create an avatar</h2>
 
-      <form id="avatar-form">
-        <input
-          id="avatar-name"
-          type="text"
-          placeholder="Avatar name"
-          required
-        >
+  <form id="avatar-form">
+    <input
+      id="avatar-name"
+      type="text"
+      placeholder="Avatar name"
+      required
+    >
 
-        <input
-          id="avatar-image"
-          type="url"
-          placeholder="Image URL, optional"
-        >
+    <label>
+      Body color
+      <input id="body-color" type="color" value="#4f86c6">
+    </label>
 
-        <button type="submit">Add avatar</button>
-      </form>
-    </section>
+    <label>
+      Hair style
+      <select id="hair-style">
+        <option value="short">Short</option>
+        <option value="spiky">Spiky</option>
+        <option value="long">Long</option>
+        <option value="none">None</option>
+      </select>
+    </label>
+
+    <label>
+      Hair color
+      <input id="hair-color" type="color" value="#3b2416">
+    </label>
+
+    <label>
+      Accessory
+      <select id="accessory">
+        <option value="none">None</option>
+        <option value="glasses">Glasses</option>
+        <option value="headband">Headband</option>
+        <option value="crown">Crown</option>
+      </select>
+    </label>
+
+    <label>
+      Background color
+      <input id="background-color" type="color" value="#e8eef7">
+    </label>
+
+    <div id="avatar-preview"></div>
+
+    <button type="submit">Add avatar</button>
+  </form>
+</section>
+
 
     <section class="panel">
       <h2>Avatars</h2>
