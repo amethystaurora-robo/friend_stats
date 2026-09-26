@@ -211,5 +211,10 @@ button:hover {
   height: 130px;
 }
 
+.color-choice[ data-value="#ffffff"] {
+  border-color: #c7ccd6;
+}
+
+
 
 
