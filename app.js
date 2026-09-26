@@ -177,22 +177,6 @@ function displayAvatars() {
     return;
   }
 
-  avatarList.innerHTML = avatars.map(avatar => {
-    const image = avatar.image ||
-      "https://placehold.co/200x200?text=Avatar";
-
-    return `
-      <article class="avatar-card">
-        <img src="${image}" alt="${avatar.name}">
-        <h3>${avatar.name}</h3>
-        <p class="total">
-          ${calculateTotalPoints(avatar.id)} points
-        </p>
-      </article>
-    `;
-  }).join("");
-}
-
 function displayPointsFields() {
   if (avatars.length === 0) {
     pointsFields.innerHTML = "<p>Create an avatar first.</p>";
