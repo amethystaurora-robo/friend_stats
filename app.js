@@ -224,12 +224,6 @@ function calculateTotalPoints(avatarId) {
   }, 0);
 }
 
-function displayAvatars() {
-  if (avatars.length === 0) {
-    avatarList.innerHTML = "<p>No avatars created yet.</p>";}
-    return;
-  }
-
 
 function displayPointsFields() {
   if (avatars.length === 0) {
