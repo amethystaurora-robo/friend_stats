@@ -13,6 +13,143 @@ let avatars = JSON.parse(localStorage.getItem("avatars")) || [];
 let entries = JSON.parse(localStorage.getItem("entries")) || [];
 let pointsChart = null;
 
+const avatarPreview = document.querySelector("#avatar-preview");
+
+function createAvatarSVG({
+  bodyColor = "#4f86c6",
+  hairColor = "#3b2416",
+  hairStyle = "short",
+  accessory = "none",
+  backgroundColor = "#e8eef7"
+}) {
+  let hair = "";
+
+  if (hairStyle === "short") {
+    hair = `
+      <path
+        d="M55 62 Q60 25 100 25 Q140 25 145 62
+           Q125 45 100 48 Q75 45 55 62"
+        fill="${hairColor}"
+      />
+    `;
+  }
+
+  if (hairStyle === "spiky") {
+    hair = `
+      <path
+        d="M55 62 L58 35 L72 42 L82 20 L94 39
+           L108 18 L116 40 L138 27 L145 62
+           Q120 45 100 48 Q75 45 55 62"
+        fill="${hairColor}"
+      />
+    `;
+  }
+
+  if (hairStyle === "long") {
+    hair = `
+      <path
+        d="M52 70 Q50 25 100 25 Q150 25 148 70
+           L135 125 L118 110 L100 120 L82 110
+           L65 125 Z"
+        fill="${hairColor}"
+      />
+    `;
+  }
+
+  let accessoryGraphic = "";
+
+  if (accessory === "glasses") {
+    accessoryGraphic = `
+      <circle cx="78" cy="72" r="13" fill="none" stroke="#222" stroke-width="4"/>
+      <circle cx="122" cy="72" r="13" fill="none" stroke="#222" stroke-width="4"/>
+      <line x1="91" y1="72" x2="109" y2="72" stroke="#222" stroke-width="4"/>
+    `;
+  }
+
+  if (accessory === "headband") {
+    accessoryGraphic = `
+      <path
+        d="M54 57 Q100 22 146 57"
+        fill="none"
+        stroke="#e63946"
+        stroke-width="9"
+      />
+    `;
+  }
+
+  if (accessory === "crown") {
+    accessoryGraphic = `
+      <path
+        d="M68 39 L75 12 L100 32 L125 12 L132 39 Z"
+        fill="#f4c542"
+        stroke="#b8860b"
+        stroke-width="3"
+      />
+    `;
+  }
+
+  return `
+    <svg
+      viewBox="0 0 200 200"
+      xmlns="http://www.w3.org/2000/svg"
+      role="img"
+      aria-label="Custom avatar"
+    >
+      <rect
+        width="200"
+        height="200"
+        rx="24"
+        fill="${backgroundColor}"
+      />
+
+      <circle
+        cx="100"
+        cy="105"
+        r="55"
+        fill="${bodyColor}"
+      />
+
+      ${hair}
+
+      <circle cx="78" cy="72" r="5" fill="#222"/>
+      <circle cx="122" cy="72" r="5" fill="#222"/>
+
+      <path
+        d="M82 102 Q100 114 118 102"
+        fill="none"
+        stroke="#222"
+        stroke-width="4"
+        stroke-linecap="round"
+      />
+
+      ${accessoryGraphic}
+    </svg>
+  `;
+}
+
+function getAvatarOptions() {
+  return {
+    bodyColor: document.querySelector("#body-color").value,
+    hairColor: document.querySelector("#hair-color").value,
+    hairStyle: document.querySelector("#hair-style").value,
+    accessory: document.querySelector("#accessory").value,
+    backgroundColor: document.querySelector("#background-color").value
+  };
+}
+
+function updateAvatarPreview() {
+  avatarPreview.innerHTML = createAvatarSVG(getAvatarOptions());
+}
+
+document.querySelectorAll(
+  "#body-color, #hair-color, #hair-style, #accessory, #background-color"
+).forEach(input => {
+  input.addEventListener("input", updateAvatarPreview);
+});
+
+updateAvatarPreview();
+
+
 function saveData() {
   localStorage.setItem("avatars", JSON.stringify(avatars));
   localStorage.setItem("entries", JSON.stringify(entries));
@@ -197,19 +334,22 @@ avatarForm.addEventListener("submit", event => {
   event.preventDefault();
 
   const name = document.querySelector("#avatar-name").value.trim();
-  const image = document.querySelector("#avatar-image").value.trim();
 
-  avatars.push({
+  const avatar = {
     id: createId(),
     name,
-    image
-  });
+    ...getAvatarOptions()
+  };
+
+  avatars.push(avatar);
 
   saveData();
-
   avatarForm.reset();
+
+  updateAvatarPreview();
   refreshPage();
 });
+
 
 entryForm.addEventListener("submit", event => {
   event.preventDefault();
@@ -281,13 +421,27 @@ compareButton.addEventListener("click", () => {
   `;
 });
 
-function refreshPage() {
-  displayAvatars();
-  displayPointsFields();
-  displayComparisonOptions();
-  displayEntries();
-  updateChart();
+function displayAvatars() {
+  if (avatars.length === 0) {
+    avatarList.innerHTML = "<p>No avatars created yet.</p>";
+    return;
+  }
+
+  avatarList.innerHTML = avatars.map(avatar => {
+    const svg = createAvatarSVG(avatar);
+
+    return `
+      <article class="avatar-card">
+        ${svg}
+        <h3>${avatar.name}</h3>
+        <p class="total">
+          ${calculateTotalPoints(avatar.id)} points
+        </p>
+      </article>
+    `;
+  }).join("");
 }
+
 
 refreshPage();
 
