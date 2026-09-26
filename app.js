@@ -226,7 +226,7 @@ function calculateTotalPoints(avatarId) {
 
 function displayAvatars() {
   if (avatars.length === 0) {
-    avatarList.innerHTML = "<p>No avatars created yet.</p>";
+    avatarList.innerHTML = "<p>No avatars created yet.</p>";}
     return;
   }
 
