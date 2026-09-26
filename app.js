@@ -16,9 +16,10 @@ let pointsChart = null;
 const avatarPreview = document.querySelector("#avatar-preview");
 
 function createAvatarSVG({
-  bodyColor = "#4f86c6",
-  hairColor = "#3b2416",
+  skinColor = "#f6c7a5",
+  hairColor = "#24160f",
   hairStyle = "short",
+  eyeColor = "#222222",
   accessory = "none",
   backgroundColor = "#e8eef7"
 }) {
@@ -106,13 +107,13 @@ function createAvatarSVG({
         cx="100"
         cy="105"
         r="55"
-        fill="${bodyColor}"
+        fill="${skinColor}"
       />
 
       ${hair}
 
-      <circle cx="78" cy="72" r="5" fill="#222"/>
-      <circle cx="122" cy="72" r="5" fill="#222"/>
+      <circle cx="78" cy="72" r="5" fill="${eyeColor}"/>
+      <circle cx="122" cy="72" r="5" fill="${eyeColor}"/>
 
       <path
         d="M82 102 Q100 114 118 102"
@@ -127,21 +128,66 @@ function createAvatarSVG({
   `;
 }
 
+const avatarChoices = {
+  skinColor: "#f6c7a5",
+  hairColor: "#24160f",
+  hairStyle: "short",
+  eyeColor: "#222222",
+  accessory: "none"
+};
+
 function getAvatarOptions() {
   return {
-    bodyColor: document.querySelector("#body-color").value,
-    hairColor: document.querySelector("#hair-color").value,
-    hairStyle: document.querySelector("#hair-style").value,
-    accessory: document.querySelector("#accessory").value,
-    backgroundColor: document.querySelector("#background-color").value
+    ...avatarChoices
   };
 }
 
-document.querySelectorAll(
-  "#body-color, #hair-color, #hair-style, #accessory, #background-color"
-).forEach(input => {
-  input.addEventListener("input", updateAvatarPreview);
+document.querySelectorAll("[data-option]").forEach(button => {
+  button.addEventListener("click", () => {
+    const option = button.dataset.option;
+    const value = button.dataset.value;
+
+    avatarChoices[option] = value;
+
+    document
+      .querySelectorAll(`[data-option="${option}"]`)
+      .forEach(item => item.classList.remove("selected"));
+
+    button.classList.add("selected");
+
+    updateAvatarPreview();
+  });
 });
+
+function updateAvatarPreview() {
+  avatarPreview.innerHTML = createAvatarSVG({
+    ...avatarChoices,
+    backgroundColor: "#e8eef7"
+  });
+}
+
+document
+  .querySelector('[data-option="skinColor"]')
+  .classList.add("selected");
+
+document
+  .querySelector('[data-option="hairColor"]')
+  .classList.add("selected");
+
+document
+  .querySelector('[data-option="hairStyle"]')
+  .classList.add("selected");
+
+document
+  .querySelector('[data-option="eyeColor"]')
+  .classList.add("selected");
+
+document
+  .querySelector('[data-option="accessory"]')
+  .classList.add("selected");
+
+updateAvatarPreview();
+
 
 
 function updateAvatarPreview() {
