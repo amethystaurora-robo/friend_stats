@@ -137,6 +137,13 @@ function getAvatarOptions() {
   };
 }
 
+document.querySelectorAll(
+  "#body-color, #hair-color, #hair-style, #accessory, #background-color"
+).forEach(input => {
+  input.addEventListener("input", updateAvatarPreview);
+});
+
+
 function updateAvatarPreview() {
   avatarPreview.innerHTML = createAvatarSVG(getAvatarOptions());
 }
