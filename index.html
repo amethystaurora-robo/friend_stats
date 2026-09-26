@@ -18,56 +18,85 @@
   </header>
 
   <main>
-<section class="panel">
-  <h2>Create an avatar</h2>
+<form id="avatar-form">
+  <input
+    id="avatar-name"
+    type="text"
+    placeholder="Avatar name"
+    required
+  >
 
-  <form id="avatar-form">
-    <input
-      id="avatar-name"
-      type="text"
-      placeholder="Avatar name"
-      required
-    >
+  <h3>Skin color</h3>
+  <div id="skin-options" class="choice-grid">
+    <button type="button" class="color-choice" data-option="skinColor" data-value="#f6c7a5" style="background:#f6c7a5"></button>
+    <button type="button" class="color-choice" data-option="skinColor" data-value="#e0a77a" style="background:#e0a77a"></button>
+    <button type="button" class="color-choice" data-option="skinColor" data-value="#b97850" style="background:#b97850"></button>
+    <button type="button" class="color-choice" data-option="skinColor" data-value="#75452f" style="background:#75452f"></button>
+  </div>
 
-    <label>
-      Body color
-      <input id="body-color" type="color" value="#4f86c6">
-    </label>
+  <h3>Hair color</h3>
+  <div id="hair-color-options" class="choice-grid">
+    <button type="button" class="color-choice" data-option="hairColor" data-value="#24160f" style="background:#24160f"></button>
+    <button type="button" class="color-choice" data-option="hairColor" data-value="#6b3e26" style="background:#6b3e26"></button>
+    <button type="button" class="color-choice" data-option="hairColor" data-value="#d49a45" style="background:#d49a45"></button>
+    <button type="button" class="color-choice" data-option="hairColor" data-value="#e5c45b" style="background:#e5c45b"></button>
+    <button type="button" class="color-choice" data-option="hairColor" data-value="#c94c4c" style="background:#c94c4c"></button>
+    <button type="button" class="color-choice" data-option="hairColor" data-value="#7546a8" style="background:#7546a8"></button>
+    <button type="button" class="color-choice" data-option="hairColor" data-value="#3d82bd" style="background:#3d82bd"></button>
+  </div>
 
-    <label>
-      Hair style
-      <select id="hair-style">
-        <option value="short">Short</option>
-        <option value="spiky">Spiky</option>
-        <option value="long">Long</option>
-        <option value="none">None</option>
-      </select>
-    </label>
+  <h3>Hair style</h3>
+  <div class="style-options">
+    <button type="button" class="style-choice" data-option="hairStyle" data-value="short">
+      Short
+    </button>
 
-    <label>
-      Hair color
-      <input id="hair-color" type="color" value="#3b2416">
-    </label>
+    <button type="button" class="style-choice" data-option="hairStyle" data-value="spiky">
+      Spiky
+    </button>
 
-    <label>
-      Accessory
-      <select id="accessory">
-        <option value="none">None</option>
-        <option value="glasses">Glasses</option>
-        <option value="headband">Headband</option>
-        <option value="crown">Crown</option>
-      </select>
-    </label>
+    <button type="button" class="style-choice" data-option="hairStyle" data-value="long">
+      Long
+    </button>
 
-    <label>
-      Background color
-      <input id="background-color" type="color" value="#e8eef7">
-    </label>
+    <button type="button" class="style-choice" data-option="hairStyle" data-value="none">
+      Bald
+    </button>
+  </div>
 
-    <div id="avatar-preview"></div>
+  <h3>Eye color</h3>
+  <div class="choice-grid">
+    <button type="button" class="color-choice" data-option="eyeColor" data-value="#222222" style="background:#222222"></button>
+    <button type="button" class="color-choice" data-option="eyeColor" data-value="#356aa0" style="background:#356aa0"></button>
+    <button type="button" class="color-choice" data-option="eyeColor" data-value="#4c8c4a" style="background:#4c8c4a"></button>
+    <button type="button" class="color-choice" data-option="eyeColor" data-value="#795548" style="background:#795548"></button>
+  </div>
 
-    <button type="submit">Add avatar</button>
-  </form>
+  <h3>Accessory</h3>
+  <div class="style-options">
+    <button type="button" class="style-choice" data-option="accessory" data-value="none">
+      None
+    </button>
+
+    <button type="button" class="style-choice" data-option="accessory" data-value="glasses">
+      Glasses
+    </button>
+
+    <button type="button" class="style-choice" data-option="accessory" data-value="headband">
+      Headband
+    </button>
+
+    <button type="button" class="style-choice" data-option="accessory" data-value="crown">
+      Crown
+    </button>
+  </div>
+
+  <h3>Preview</h3>
+  <div id="avatar-preview"></div>
+
+  <button type="submit">Create avatar</button>
+</form>
+
 </section>
 
 
