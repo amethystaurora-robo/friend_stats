@@ -15,62 +15,195 @@ let pointsChart = null;
 
 const avatarPreview = document.querySelector("#avatar-preview");
 
-function createAvatarSVG({
-  skinColor = "#f6c7a5",
-  hairColor = "#24160f",
-  hairStyle = "short",
-  eyeColor = "#222222",
-  accessory = "none",
-  backgroundColor = "#e8eef7"
-}) {
-let hair = "";
+function createAvatarSVG(avatar) {
+  const {
+    skinColor = "#f6c7a5",
+    hairColor = "#24160f",
+    hairStyle = "short",
+    eyeColor = "#222222",
+    accessory = "none"
+  } = avatar;
 
-if (hairStyle === "short") {
-  hair = `
-    <path
-      d="
-        M45 76
-        Q45 48 58 38
-        Q75 23 100 23
-        Q125 23 142 38
-        Q155 48 155 76
-        Q143 61 130 56
-        Q115 49 100 49
-        Q85 49 70 56
-        Q57 61 45 76
-        Z
-      "
-      fill="${hairColor}"
-      stroke="#222"
-      stroke-width="2"
-    />
+  let hairBack = "";
+  let hairTop = "";
+
+  /*
+   * Long hair:
+   * - wider on both sides
+   * - behind the face
+   * - leaves an open central area for the face
+   */
+  if (hairStyle === "long") {
+    hairBack = `
+      <path
+        d="
+          M36 92
+          Q32 48 55 30
+          Q75 14 100 14
+          Q125 14 145 30
+          Q168 48 164 92
+
+          L164 164
+          Q153 181 137 174
+          L122 145
+
+          Q111 153 100 153
+          Q89 153 78 145
+
+          L63 174
+          Q47 181 36 164
+          Z
+        "
+        fill="${hairColor}"
+        stroke="#222"
+        stroke-width="2"
+      />
+    `;
+
+    /*
+     * This central opening keeps the face visible.
+     * The top section still overlaps the forehead.
+     */
+    hairTop = `
+      <path
+        d="
+          M37 91
+          Q35 49 56 31
+          Q76 15 100 15
+          Q124 15 144 31
+          Q165 49 163 91
+
+          Q148 68 130 61
+          Q115 55 100 55
+          Q85 55 70 61
+          Q52 68 37 91
+          Z
+        "
+        fill="${hairColor}"
+        stroke="#222"
+        stroke-width="2"
+      />
+    `;
+  }
+
+  /*
+   * Short hair is lower and slightly wider.
+   */
+  if (hairStyle === "short") {
+    hairTop = `
+      <path
+        d="
+          M39 91
+          Q38 52 57 34
+          Q75 18 100 18
+          Q125 18 143 34
+          Q162 52 161 91
+
+          Q145 70 128 63
+          Q114 57 100 57
+          Q86 57 72 63
+          Q55 70 39 91
+          Z
+        "
+        fill="${hairColor}"
+        stroke="#222"
+        stroke-width="2"
+      />
+    `;
+  }
+
+  let accessoryGraphic = "";
+
+  if (accessory === "glasses") {
+    accessoryGraphic = `
+      <circle
+        cx="76"
+        cy="103"
+        r="14"
+        fill="none"
+        stroke="#222"
+        stroke-width="4"
+      />
+
+      <circle
+        cx="124"
+        cy="103"
+        r="14"
+        fill="none"
+        stroke="#222"
+        stroke-width="4"
+      />
+
+      <line
+        x1="90"
+        y1="103"
+        x2="110"
+        y2="103"
+        stroke="#222"
+        stroke-width="4"
+      />
+    `;
+  }
+
+  return `
+    <svg
+      viewBox="0 0 200 220"
+      xmlns="http://www.w3.org/2000/svg"
+      role="img"
+      aria-label="Avatar"
+    >
+      <rect
+        width="200"
+        height="220"
+        rx="24"
+        fill="#eef1f6"
+      />
+
+      <!-- Long hair behind the head and face -->
+      ${hairBack}
+
+      <!-- Head -->
+      <circle
+        cx="100"
+        cy="113"
+        r="66"
+        fill="${skinColor}"
+        stroke="#222"
+        stroke-width="2"
+      />
+
+      <!-- Hair over the forehead -->
+      ${hairTop}
+
+      <!-- Eyes moved lower -->
+      <circle
+        cx="76"
+        cy="105"
+        r="6"
+        fill="${eyeColor}"
+      />
+
+      <circle
+        cx="124"
+        cy="105"
+        r="6"
+        fill="${eyeColor}"
+      />
+
+      <!-- Mouth moved lower -->
+      <path
+        d="M80 143 Q100 158 120 143"
+        fill="none"
+        stroke="#222"
+        stroke-width="4"
+        stroke-linecap="round"
+      />
+
+      ${accessoryGraphic}
+    </svg>
   `;
 }
 
-if (hairStyle === "long") {
-  hair = `
-    <path
-      d="
-        M43 82
-        Q40 48 58 35
-        Q75 22 100 22
-        Q125 22 142 35
-        Q160 48 157 82
-        L151 145
-        Q140 158 128 145
-        L118 126
-        Q109 132 100 132
-        Q91 132 82 126
-        L72 145
-        Q60 158 49 145
-        Z
-      "
-      fill="${hairColor}"
-      stroke="#222"
-      stroke-width="2"
-    />
-  `;
-}
 
 
   let accessoryGraphic = "";
