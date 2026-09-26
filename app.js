@@ -21,37 +21,30 @@ function createAvatarSVG(avatar) {
     hairColor = "#24160f",
     hairStyle = "short",
     eyeColor = "#222222",
-    accessory = "none"
+    accessory = "none",
+    backgroundColor = "#eef1f6"
   } = avatar;
 
   let hairBack = "";
   let hairTop = "";
 
-  /*
-   * Long hair:
-   * - wider on both sides
-   * - behind the face
-   * - leaves an open central area for the face
-   */
   if (hairStyle === "long") {
+    // Wide hair behind the head and face
     hairBack = `
       <path
         d="
-          M36 92
-          Q32 48 55 30
-          Q75 14 100 14
-          Q125 14 145 30
-          Q168 48 164 92
-
-          L164 164
-          Q153 181 137 174
-          L122 145
-
-          Q111 153 100 153
-          Q89 153 78 145
-
-          L63 174
-          Q47 181 36 164
+          M30 100
+          Q24 50 52 27
+          Q74 8 100 8
+          Q126 8 148 27
+          Q176 50 170 100
+          L170 178
+          Q157 194 140 184
+          L119 148
+          Q110 157 100 157
+          Q90 157 81 148
+          L60 184
+          Q43 194 30 178
           Z
         "
         fill="${hairColor}"
@@ -60,23 +53,19 @@ function createAvatarSVG(avatar) {
       />
     `;
 
-    /*
-     * This central opening keeps the face visible.
-     * The top section still overlaps the forehead.
-     */
+    // Hair fringe. The opening leaves room for the face.
     hairTop = `
       <path
         d="
-          M37 91
-          Q35 49 56 31
-          Q76 15 100 15
-          Q124 15 144 31
-          Q165 49 163 91
-
-          Q148 68 130 61
-          Q115 55 100 55
-          Q85 55 70 61
-          Q52 68 37 91
+          M31 98
+          Q28 53 55 30
+          Q76 12 100 12
+          Q124 12 145 30
+          Q172 53 169 98
+          Q151 75 133 68
+          Q117 62 100 62
+          Q83 62 67 68
+          Q49 75 31 98
           Z
         "
         fill="${hairColor}"
@@ -86,23 +75,19 @@ function createAvatarSVG(avatar) {
     `;
   }
 
-  /*
-   * Short hair is lower and slightly wider.
-   */
   if (hairStyle === "short") {
     hairTop = `
       <path
         d="
-          M39 91
-          Q38 52 57 34
-          Q75 18 100 18
-          Q125 18 143 34
-          Q162 52 161 91
-
-          Q145 70 128 63
-          Q114 57 100 57
-          Q86 57 72 63
-          Q55 70 39 91
+          M36 98
+          Q33 55 56 32
+          Q76 14 100 14
+          Q124 14 144 32
+          Q167 55 164 98
+          Q147 76 130 69
+          Q115 63 100 63
+          Q85 63 70 69
+          Q53 76 36 98
           Z
         "
         fill="${hairColor}"
@@ -117,133 +102,38 @@ function createAvatarSVG(avatar) {
   if (accessory === "glasses") {
     accessoryGraphic = `
       <circle
-        cx="76"
-        cy="103"
-        r="14"
+        cx="73"
+        cy="111"
+        r="15"
         fill="none"
         stroke="#222"
         stroke-width="4"
       />
 
       <circle
-        cx="124"
-        cy="103"
-        r="14"
+        cx="127"
+        cy="111"
+        r="15"
         fill="none"
         stroke="#222"
         stroke-width="4"
       />
 
       <line
-        x1="90"
-        y1="103"
-        x2="110"
-        y2="103"
+        x1="88"
+        y1="111"
+        x2="112"
+        y2="111"
         stroke="#222"
         stroke-width="4"
       />
     `;
   }
 
-  return `
-    <svg
-      viewBox="0 0 200 220"
-      xmlns="http://www.w3.org/2000/svg"
-      role="img"
-      aria-label="Avatar"
-    >
-      <rect
-        width="200"
-        height="220"
-        rx="24"
-        fill="#eef1f6"
-      />
-
-      <!-- Long hair behind the head and face -->
-      ${hairBack}
-
-      <!-- Head -->
-      <circle
-        cx="100"
-        cy="113"
-        r="66"
-        fill="${skinColor}"
-        stroke="#222"
-        stroke-width="2"
-      />
-
-      <!-- Hair over the forehead -->
-      ${hairTop}
-
-      <!-- Eyes moved lower -->
-      <circle
-        cx="76"
-        cy="105"
-        r="6"
-        fill="${eyeColor}"
-      />
-
-      <circle
-        cx="124"
-        cy="105"
-        r="6"
-        fill="${eyeColor}"
-      />
-
-      <!-- Mouth moved lower -->
-      <path
-        d="M80 143 Q100 158 120 143"
-        fill="none"
-        stroke="#222"
-        stroke-width="4"
-        stroke-linecap="round"
-      />
-
-      ${accessoryGraphic}
-    </svg>
-  `;
-}
-
-
-
-  let accessoryGraphic = "";
-
-if (accessory === "glasses") {
-  accessoryGraphic = `
-    <circle
-      cx="78"
-      cy="88"
-      r="13"
-      fill="none"
-      stroke="#222"
-      stroke-width="4"
-    />
-
-    <circle
-      cx="122"
-      cy="88"
-      r="13"
-      fill="none"
-      stroke="#222"
-      stroke-width="4"
-    />
-
-    <line
-      x1="91"
-      y1="88"
-      x2="109"
-      y2="88"
-      stroke="#222"
-      stroke-width="4"
-    />
-  `;
-}
-
-
   if (accessory === "headband") {
     accessoryGraphic = `
       <path
-        d="M54 57 Q100 22 146 57"
+        d="M38 76 Q100 31 162 76"
         fill="none"
         stroke="#e63946"
         stroke-width="9"
@@ -254,7 +144,7 @@ if (accessory === "glasses") {
   if (accessory === "crown") {
     accessoryGraphic = `
       <path
-        d="M68 39 L75 12 L100 32 L125 12 L132 39 Z"
+        d="M62 43 L70 12 L100 35 L130 12 L138 43 Z"
         fill="#f4c542"
         stroke="#b8860b"
         stroke-width="3"
@@ -264,33 +154,52 @@ if (accessory === "glasses") {
 
   return `
     <svg
-      viewBox="0 0 200 200"
+      viewBox="0 0 200 220"
       xmlns="http://www.w3.org/2000/svg"
       role="img"
       aria-label="Custom avatar"
     >
       <rect
         width="200"
-        height="200"
+        height="220"
         rx="24"
         fill="${backgroundColor}"
       />
 
+      <!-- Long hair behind the head -->
+      ${hairBack}
+
+      <!-- Head moved lower and enlarged -->
       <circle
         cx="100"
-        cy="105"
-        r="55"
+        cy="120"
+        r="68"
         fill="${skinColor}"
+        stroke="#222"
+        stroke-width="2"
       />
 
-      ${hair}
+      <!-- Hair over the forehead -->
+      ${hairTop}
 
-      <circle cx="78" cy="88" r="5" fill="${eyeColor}"/>
-      <circle cx="122" cy="88" r="5" fill="${eyeColor}"/>
-      
+      <!-- Eyes moved lower -->
+      <circle
+        cx="73"
+        cy="112"
+        r="6"
+        fill="${eyeColor}"
+      />
+
+      <circle
+        cx="127"
+        cy="112"
+        r="6"
+        fill="${eyeColor}"
+      />
+
+      <!-- Mouth moved lower -->
       <path
-        d="M82 122 Q100 134 118 122"
-
+        d="M78 151 Q100 168 122 151"
         fill="none"
         stroke="#222"
         stroke-width="4"
@@ -301,6 +210,7 @@ if (accessory === "glasses") {
     </svg>
   `;
 }
+
 
 const avatarChoices = {
   skinColor: "#f6c7a5",
