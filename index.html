@@ -1,1 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
+  <title>Competition Statistics</title>
+
+  <link rel="stylesheet" href="style.css">
+
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+
+<body>
+  <header>
+    <h1>Competition Statistics</h1>
+    <p>Manage avatars, competitions, points, and statistics.</p>
+  </header>
+
+  <main>
+    <section class="panel">
+      <h2>Create an avatar</h2>
+
+      <form id="avatar-form">
+        <input
+          id="avatar-name"
+          type="text"
+          placeholder="Avatar name"
+          required
+        >
+
+        <input
+          id="avatar-image"
+          type="url"
+          placeholder="Image URL, optional"
+        >
+
+        <button type="submit">Add avatar</button>
+      </form>
+    </section>
+
+    <section class="panel">
+      <h2>Avatars</h2>
+      <div id="avatar-list" class="avatar-list"></div>
+    </section>
+
+    <section class="panel">
+      <h2>Add competition entry</h2>
+
+      <form id="entry-form">
+        <label>
+          Competition type
+          <input
+            id="competition-type"
+            type="text"
+            placeholder="Football, quiz, tennis..."
+            required
+          >
+        </label>
+
+        <label>
+          Date
+          <input id="competition-date" type="date" required>
+        </label>
+
+        <label>
+          Notes
+          <textarea
+            id="competition-notes"
+            placeholder="Optional notes"
+          ></textarea>
+        </label>
+
+        <h3>Points</h3>
+        <div id="points-fields"></div>
+
+        <button type="submit">Save competition</button>
+      </form>
+    </section>
+
+    <section class="panel">
+      <h2>Compare avatars</h2>
+
+      <div class="comparison-controls">
+        <select id="avatar-one"></select>
+        <select id="avatar-two"></select>
+        <button id="compare-button">Compare</button>
+      </div>
+
+      <div id="comparison-result"></div>
+    </section>
+
+    <section class="panel">
+      <h2>Points over time</h2>
+      <canvas id="points-chart"></canvas>
+    </section>
+
+    <section class="panel">
+      <h2>Competition history</h2>
+      <div id="entry-list"></div>
+    </section>
+  </main>
+
+  <script src="app.js"></script>
+</body>
+</html>
