@@ -520,10 +520,6 @@ document
   .classList.add("selected");
 
 document
-  .querySelector('[data-option="hairStyle"]')
-  .classList.add("selected");
-
-document
   .querySelector('[data-option="eyeColor"]')
   .classList.add("selected");
 
