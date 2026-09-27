@@ -187,9 +187,8 @@
   <div class="choice-grid">
     <button
       type="button"
-      class="choice color-choice accessory-color-choice selected"
-      data-option="accessoryColor"
-      data-value="#ff0000"
+      class="choice color-choice accessory-color-choice"
+      data-accessory-color="#ff0000"
       style="--choice-color: #ff0000"
       aria-label="Red accessory"
     ></button>
@@ -197,8 +196,7 @@
     <button
       type="button"
       class="choice color-choice accessory-color-choice"
-      data-option="accessoryColor"
-      data-value="#ff7f00"
+      data-accessory-color="#ff7f00"
       style="--choice-color: #ff7f00"
       aria-label="Orange accessory"
     ></button>
@@ -206,8 +204,7 @@
     <button
       type="button"
       class="choice color-choice accessory-color-choice"
-      data-option="accessoryColor"
-      data-value="#ffff00"
+      data-accessory-color="#ffff00"
       style="--choice-color: #ffff00"
       aria-label="Yellow accessory"
     ></button>
@@ -215,8 +212,7 @@
     <button
       type="button"
       class="choice color-choice accessory-color-choice"
-      data-option="accessoryColor"
-      data-value="#008000"
+      data-accessory-color="#008000"
       style="--choice-color: #008000"
       aria-label="Green accessory"
     ></button>
@@ -224,8 +220,7 @@
     <button
       type="button"
       class="choice color-choice accessory-color-choice"
-      data-option="accessoryColor"
-      data-value="#0000ff"
+      data-accessory-color="#0000ff"
       style="--choice-color: #0000ff"
       aria-label="Blue accessory"
     ></button>
@@ -233,8 +228,7 @@
     <button
       type="button"
       class="choice color-choice accessory-color-choice"
-      data-option="accessoryColor"
-      data-value="#800080"
+      data-accessory-color="#800080"
       style="--choice-color: #800080"
       aria-label="Purple accessory"
     ></button>
@@ -242,8 +236,7 @@
     <button
       type="button"
       class="choice color-choice accessory-color-choice"
-      data-option="accessoryColor"
-      data-value="#000000"
+      data-accessory-color="#000000"
       style="--choice-color: #000000"
       aria-label="Black accessory"
     ></button>
@@ -251,8 +244,7 @@
     <button
       type="button"
       class="choice color-choice accessory-color-choice"
-      data-option="accessoryColor"
-      data-value="#808080"
+      data-accessory-color="#808080"
       style="--choice-color: #808080"
       aria-label="Gray accessory"
     ></button>
@@ -260,8 +252,7 @@
     <button
       type="button"
       class="choice color-choice accessory-color-choice"
-      data-option="accessoryColor"
-      data-value="#8b4513"
+      data-accessory-color="#8b4513"
       style="--choice-color: #8b4513"
       aria-label="Brown accessory"
     ></button>
@@ -312,88 +303,76 @@
           </div>
         </fieldset>
 
-       <div class="text-choice-grid">
-  <button
-    type="button"
-    class="choice text-choice selected"
-    data-option="accessory"
-    data-value="none"
-  >
-    None
-  </button>
+<fieldset>
+  <legend>Accessories</legend>
 
-  <button
-    type="button"
-    class="choice text-choice"
-    data-option="accessory"
-    data-value="glasses"
-  >
-    Glasses
-  </button>
+  <div class="text-choice-grid">
+    <button
+      type="button"
+      class="choice text-choice"
+      data-accessory="glasses"
+    >
+      Glasses
+    </button>
 
-  <button
-    type="button"
-    class="choice text-choice"
-    data-option="accessory"
-    data-value="beard"
-  >
-    Beard
-  </button>
+    <button
+      type="button"
+      class="choice text-choice"
+      data-accessory="beard"
+    >
+      Beard
+    </button>
 
-  <button
-    type="button"
-    class="choice text-choice"
-    data-option="accessory"
-    data-value="horn"
-  >
-    Horn
-  </button>
+    <button
+      type="button"
+      class="choice text-choice"
+      data-accessory="horn"
+    >
+      Horn
+    </button>
 
-  <button
-    type="button"
-    class="choice text-choice"
-    data-option="accessory"
-    data-value="top-hat"
-  >
-    Top hat
-  </button>
+    <button
+      type="button"
+      class="choice text-choice"
+      data-accessory="top-hat"
+    >
+      Top hat
+    </button>
 
-  <button
-    type="button"
-    class="choice text-choice"
-    data-option="accessory"
-    data-value="halo"
-  >
-    Halo
-  </button>
+    <button
+      type="button"
+      class="choice text-choice"
+      data-accessory="halo"
+    >
+      Halo
+    </button>
 
-  <button
-    type="button"
-    class="choice text-choice"
-    data-option="accessory"
-    data-value="beret"
-  >
-    Beret
-  </button>
+    <button
+      type="button"
+      class="choice text-choice"
+      data-accessory="beret"
+    >
+      Beret
+    </button>
 
-  <button
-    type="button"
-    class="choice text-choice"
-    data-option="accessory"
-    data-value="band"
-  >
-    Band
-  </button>
+    <button
+      type="button"
+      class="choice text-choice"
+      data-accessory="band"
+    >
+      Band
+    </button>
 
-  <button
-    type="button"
-    class="choice text-choice"
-    data-option="accessory"
-    data-value="nose-bullring"
-  >
-    Bullring
-  </button>
-</div>
+    <button
+      type="button"
+      class="choice text-choice"
+      data-accessory="nose-bullring"
+    >
+      Bullring
+    </button>
+  </div>
+</fieldset>
+
 
 
         <button type="submit" class="primary-button">
@@ -408,12 +387,6 @@
     </div>
   </form>
 
-       <div class="preview-container">
-        <h3>Preview</h3>
-        <div id="avatar-preview"></div>
-      </div>
-    </div>
-  </form>
 </section>
 
 
