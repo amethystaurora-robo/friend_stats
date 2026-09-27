@@ -138,7 +138,8 @@
     <button
   type="button"
   class="choice text-choice"
-  data-mouth="tongue"
+  data-option="mouth"
+  data-value="tongue"
 >
   Tongue Out
 </button>
@@ -146,7 +147,8 @@
 <button
   type="button"
   class="choice text-choice"
-  data-mouth="missing-tooth"
+  data-option="mouth"
+  data-value="missing-tooth"
 >
   Missing Tooth
 </button>
@@ -465,14 +467,30 @@
       </form>
     </section>
 
+    <button
+  type="button"
+  class="delete-entry-button"
+  data-delete-entry="${escapeHTML(entry.id)}"
+>
+  Delete competition
+</button>
+
+
     <section class="panel">
       <h2>Compare avatars</h2>
 
-      <div class="comparison-controls">
-        <select id="avatar-one"></select>
-        <select id="avatar-two"></select>
-        <button id="compare-button">Compare</button>
-      </div>
+    <div class="comparison-controls">
+      <label for="avatar-one">First avatar</label>
+      <select id="avatar-one"></select>
+    
+      <label for="avatar-two">Second avatar</label>
+      <select id="avatar-two"></select>
+    
+      <button id="compare-button" type="button">
+        Compare
+      </button>
+    </div>
+
 
       <div id="comparison-result"></div>
     </section>
