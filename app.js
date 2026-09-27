@@ -19,78 +19,280 @@ function createAvatarSVG(avatar) {
   const {
     skinColor = "#f6c7a5",
     hairColor = "#24160f",
-    hairStyle = "short",
     eyeColor = "#222222",
     accessory = "none",
+    accessoryColor = "#e63946",
+    mouth = "smile",
     backgroundColor = "#eef1f6"
   } = avatar;
 
-  let hairBack = "";
-  let hairTop = "";
+  /*
+    The hair is now the complete avatar shape.
+    There is no separate face circle.
+  */
 
-  if (hairStyle === "long") {
-    // Wide hair behind the head and face
-    hairBack = `
+  const avatarShape = `
+    <path
+      d="
+        M30 190
+        L30 92
+        Q30 42 60 18
+        Q100 -8 140 18
+        Q170 42 170 92
+        L170 190
+        Q155 207 132 202
+        L100 190
+        L68 202
+        Q45 207 30 190
+        Z
+      "
+      fill="${hairColor}"
+      stroke="#222"
+      stroke-width="3"
+    />
+  `;
+
+  /*
+    A skin-colored face area is drawn directly on top of the hair.
+    This is not a circle; it follows the central face shape.
+  */
+  const faceArea = `
+    <path
+      d="
+        M53 91
+        Q53 54 100 50
+        Q147 54 147 91
+        L143 143
+        Q137 174 100 181
+        Q63 174 57 143
+        Z
+      "
+      fill="${skinColor}"
+    />
+  `;
+
+  const eyes = `
+    <circle cx="75" cy="111" r="6" fill="${eyeColor}" />
+    <circle cx="125" cy="111" r="6" fill="${eyeColor}" />
+  `;
+
+  let mouthGraphic = "";
+
+  if (mouth === "grinning") {
+    mouthGraphic = `
       <path
-        d="
-          M30 100
-          Q24 50 52 27
-          Q74 8 100 8
-          Q126 8 148 27
-          Q176 50 170 100
-          L170 178
-          Q157 194 140 184
-          L119 148
-          Q110 157 100 157
-          Q90 157 81 148
-          L60 184
-          Q43 194 30 178
-          Z
-        "
-        fill="${hairColor}"
+        d="M70 143 Q100 171 130 143 Q126 169 100 174 Q74 169 70 143 Z"
+        fill="#fff"
         stroke="#222"
-        stroke-width="2"
+        stroke-width="3"
       />
     `;
+  }
 
-    // Hair fringe. The opening leaves room for the face.
-    hairTop = `
+  if (mouth === "braces") {
+    mouthGraphic = `
       <path
-        d="
-          M31 98
-          Q28 53 55 30
-          Q76 12 100 12
-          Q124 12 145 30
-          Q172 53 169 98
-          Q151 75 133 68
-          Q117 62 100 62
-          Q83 62 67 68
-          Q49 75 31 98
-          Z
-        "
-        fill="${hairColor}"
+        d="M70 143 Q100 171 130 143 Q126 169 100 174 Q74 169 70 143 Z"
+        fill="#fff"
+        stroke="#222"
+        stroke-width="3"
+      />
+
+      <path
+        d="M78 151 L78 164 M89 157 L89 170 M100 160 L100 172
+           M111 157 L111 170 M122 151 L122 164"
+        stroke="#4d96ff"
+        stroke-width="3"
+      />
+    `;
+  }
+
+  if (mouth === "fangs") {
+    mouthGraphic = `
+      <path
+        d="M72 145 Q100 166 128 145 Q123 172 100 174 Q77 172 72 145 Z"
+        fill="#fff"
+        stroke="#222"
+        stroke-width="3"
+      />
+
+      <path
+        d="M82 150 L87 166 L93 153
+           M107 153 L113 166 L118 150"
+        fill="#fff"
         stroke="#222"
         stroke-width="2"
       />
     `;
   }
 
-  if (hairStyle === "short") {
-    hairTop = `
+  if (mouth === "frown") {
+    mouthGraphic = `
+      <pat
+function createAvatarSVG(avatar) {
+  const {
+    skinColor = "#f6c7a5",
+    hairColor = "#24160f",
+    eyeColor = "#222222",
+    accessory = "none",
+    accessoryColor = "#e63946",
+    mouth = "grinning",
+    backgroundColor = "#eef1f6"
+  } = avatar;
+
+  // Main avatar shape. There is no face circle.
+  const avatarShape = `
+    <path
+      d="
+        M30 190
+        L30 92
+        Q30 42 60 18
+        Q100 -8 140 18
+        Q170 42 170 92
+        L170 190
+        Q155 207 132 202
+        L100 190
+        L68 202
+        Q45 207 30 190
+        Z
+      "
+      fill="${hairColor}"
+      stroke="#222"
+      stroke-width="3"
+    />
+  `;
+
+  // Face area inside the avatar shape.
+  const faceArea = `
+    <path
+      d="
+        M53 91
+        Q53 54 100 50
+        Q147 54 147 91
+        L143 143
+        Q137 174 100 181
+        Q63 174 57 143
+        Z
+      "
+      fill="${skinColor}"
+    />
+  `;
+
+  const eyes = `
+    <circle
+      cx="75"
+      cy="111"
+      r="6"
+      fill="${eyeColor}"
+    />
+
+    <circle
+      cx="125"
+      cy="111"
+      r="6"
+      fill="${eyeColor}"
+    />
+  `;
+
+  let mouthGraphic = "";
+
+  if (mouth === "grinning") {
+    mouthGraphic = `
+      <path
+        d="M70 143 Q100 171 130 143 Q126 169 100 174 Q74 169 70 143 Z"
+        fill="#ffffff"
+        stroke="#222"
+        stroke-width="3"
+      />
+    `;
+  }
+
+  if (mouth === "braces") {
+    mouthGraphic = `
+      <path
+        d="M70 143 Q100 171 130 143 Q126 169 100 174 Q74 169 70 143 Z"
+        fill="#ffffff"
+        stroke="#222"
+        stroke-width="3"
+      />
+
       <path
         d="
-          M36 98
-          Q33 55 56 32
-          Q76 14 100 14
-          Q124 14 144 32
-          Q167 55 164 98
-          Q147 76 130 69
-          Q115 63 100 63
-          Q85 63 70 69
-          Q53 76 36 98
-          Z
+          M78 151 L78 164
+          M89 157 L89 170
+          M100 160 L100 172
+          M111 157 L111 170
+          M122 151 L122 164
         "
-        fill="${hairColor}"
+        fill="none"
+        stroke="#2563eb"
+        stroke-width="3"
+      />
+    `;
+  }
+
+  if (mouth === "fangs") {
+    mouthGraphic = `
+      <path
+        d="M72 145 Q100 166 128 145 Q123 172 100 174 Q77 172 72 145 Z"
+        fill="#ffffff"
+        stroke="#222"
+        stroke-width="3"
+      />
+
+      <path
+        d="
+          M82 150 L87 166 L93 153
+          M107 153 L113 166 L118 150
+        "
+        fill="#ffffff"
+        stroke="#222"
+        stroke-width="2"
+      />
+    `;
+  }
+
+  if (mouth === "frown") {
+    mouthGraphic = `
+      <path
+        d="M78 164 Q100 144 122 164"
+        fill="none"
+        stroke="#222"
+        stroke-width="4"
+        stroke-linecap="round"
+      />
+    `;
+  }
+
+  if (mouth === "beak") {
+    mouthGraphic = `
+      <path
+        d="M100 137 L78 160 L122 160 Z"
+        fill="#f4a261"
+        stroke="#222"
+        stroke-width="3"
+      />
+    `;
+  }
+
+  if (mouth === "lion") {
+    mouthGraphic = `
+      <path
+        d="M69 143 Q100 171 131 143 Q126 176 100 180 Q74 176 69 143 Z"
+        fill="#ffffff"
+        stroke="#222"
+        stroke-width="3"
+      />
+
+      <path
+        d="
+          M76 148 L82 168
+          L88 153 L94 172
+          L100 155 L106 172
+          L112 153 L118 168
+          L124 148
+        "
+        fill="#ffffff"
         stroke="#222"
         stroke-width="2"
       />
@@ -99,55 +301,165 @@ function createAvatarSVG(avatar) {
 
   let accessoryGraphic = "";
 
-  if (accessory === "glasses") {
-    accessoryGraphic = `
-      <circle
-        cx="73"
-        cy="111"
-        r="15"
-        fill="none"
-        stroke="#222"
-        stroke-width="4"
-      />
-
-      <circle
-        cx="127"
-        cy="111"
-        r="15"
-        fill="none"
-        stroke="#222"
-        stroke-width="4"
-      />
-
-      <line
-        x1="88"
-        y1="111"
-        x2="112"
-        y2="111"
-        stroke="#222"
-        stroke-width="4"
-      />
-    `;
-  }
-
-  if (accessory === "headband") {
+  if (accessory === "beard") {
     accessoryGraphic = `
       <path
-        d="M38 76 Q100 31 162 76"
-        fill="none"
-        stroke="#e63946"
-        stroke-width="9"
-      />
-    `;
-  }
-
-  if (accessory === "crown") {
-    accessoryGraphic = `
-      <path
-        d="M62 43 L70 12 L100 35 L130 12 L138 43 Z"
-        fill="#f4c542"
-        stroke="#b8860b"
+        d="
+          M64 141
+          Q70 184 100 193
+          Q130 184 136 141
+          Q124 153 100 156
+          Q76 153 64 141
+          Z
+        "
+        fill="${accessoryColor}"
+        stroke="#222"
         stroke-width="3"
+      />
+    `;
+  }
+
+  if (accessory === "unicorn") {
+    accessoryGraphic = `
+      <path
+        d="M100 48 L86 8 L114 8 Z"
+        fill="${accessoryColor}"
+        stroke="#222"
+        stroke-width="3"
+      />
+
+      <path
+        d="
+          M90 18 L110 18
+          M93 28 L108 28
+          M96 38 L105 38
+        "
+        stroke="#ffffff"
+        stroke-width="3"
+      />
+    `;
+  }
+
+  if (accessory === "top-hat") {
+    accessoryGraphic = `
+      <rect
+        x="59"
+        y="24"
+        width="82"
+        height="42"
+        rx="5"
+        fill="${accessoryColor}"
+        stroke="#222"
+        stroke-width="3"
+      />
+
+      <rect
+        x="47"
+        y="59"
+        width="106"
+        height="13"
+        rx="5"
+        fill="${accessoryColor}"
+        stroke="#222"
+        stroke-width="3"
+      />
+
+      <rect
+        x="59"
+        y="51"
+        width="82"
+        height="9"
+        fill="#222"
+      />
+    `;
+  }
+
+  if (accessory === "halo") {
+    accessoryGraphic = `
+      <ellipse
+        cx="100"
+        cy="15"
+        rx="53"
+        ry="13"
+        fill="none"
+        stroke="${accessoryColor}"
+        stroke-width="8"
+      />
+    `;
+  }
+
+  if (accessory === "beret") {
+    accessoryGraphic = `
+      <path
+        d="
+          M48 55
+          Q67 13 111 15
+          Q145 17 154 50
+          Q120 61 78 59
+          Q60 59 48 55
+          Z
+        "
+        fill="${accessoryColor}"
+        stroke="#222"
+        stroke-width="3"
+      />
+
+      <circle
+        cx="106"
+        cy="22"
+        r="6"
+        fill="${accessoryColor}"
+        stroke="#222"
+        stroke-width="2"
+      />
+    `;
+  }
+
+  if (accessory === "band") {
+    accessoryGraphic = `
+      <path
+        d="M34 76 Q100 42 166 76"
+        fill="none"
+        stroke="${accessoryColor}"
+        stroke-width="11"
+      />
+    `;
+  }
+
+  if (accessory === "nose-stud") {
+    accessoryGraphic = `
+      <circle
+        cx="101"
+        cy="132"
+        r="4"
+        fill="${accessoryColor}"
+        stroke="#222"
+        stroke-width="2"
+      />
+    `;
+  }
+
+  if (accessory === "nose-bullring") {
+    accessoryGraphic = `
+      <path
+        d="M91 133 Q100 146 109 133"
+        fill="none"
+        stroke="${accessoryColor}"
+        stroke-width="4"
+      />
+
+      <circle
+        cx="91"
+        cy="133"
+        r="3"
+        fill="${accessoryColor}"
+      />
+
+      <circle
+        cx="109"
+        cy="133"
+        r="3"
+        fill="${accessoryColor}"
       />
     `;
   }
@@ -166,65 +478,13 @@ function createAvatarSVG(avatar) {
         fill="${backgroundColor}"
       />
 
-      <!-- Long hair behind the head -->
-      ${hairBack}
-
-      <!-- Head moved lower and enlarged -->
-      <circle
-        cx="100"
-        cy="120"
-        r="68"
-        fill="${skinColor}"
-        stroke="#222"
-        stroke-width="2"
-      />
-
-      <!-- Hair over the forehead -->
-      ${hairTop}
-
-      <!-- Eyes moved lower -->
-      <circle
-        cx="73"
-        cy="112"
-        r="6"
-        fill="${eyeColor}"
-      />
-
-      <circle
-        cx="127"
-        cy="112"
-        r="6"
-        fill="${eyeColor}"
-      />
-
-      <!-- Mouth moved lower -->
-      <path
-        d="M78 151 Q100 168 122 151"
-        fill="none"
-        stroke="#222"
-        stroke-width="4"
-        stroke-linecap="round"
-      />
-
+      ${avatarShape}
+      ${faceArea}
       ${accessoryGraphic}
+      ${eyes}
+      ${mouthGraphic}
     </svg>
   `;
-}
-
-
-const avatarChoices = {
-  skinColor: "#f6c7a5",
-  hairColor: "#24160f",
-  hairStyle: "short",
-  eyeColor: "#222222",
-  accessory: "none"
-};
-
-
-function getAvatarOptions() {
-  return {
-    ...avatarChoices
-  };
 }
 
 document.querySelectorAll("[data-option]").forEach(button => {
