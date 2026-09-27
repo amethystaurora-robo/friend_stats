@@ -192,6 +192,27 @@ function createAvatarSVG(avatar = {}) {
     `;
   }
 
+  if (accessoryMap.has("mustache")) {
+  const color = accessoryMap.get("mustache");
+
+  accessoryGraphic += `
+    <path
+      d="
+        M100 137
+        C91 128 78 127 70 136
+        C77 148 89 151 100 142
+        C111 151 123 148 130 136
+        C122 127 109 128 100 137
+        Z
+      "
+      fill="${color}"
+      stroke="#222"
+      stroke-width="2"
+      stroke-linejoin="round"
+    />
+  `;
+}
+
   if (accessoryMap.has("top-hat")) {
     const color = accessoryMap.get("top-hat");
 
