@@ -359,131 +359,6 @@ function createAvatarSVG(avatar = {}) {
     `;
   }
 
-  if (mouth === "frown") {
-    mouthGraphic = `
-      <pat
-function createAvatarSVG(avatar) {
-  const {
-    skinColor = "#f6c7a5",
-    hairColor = "#24160f",
-    eyeColor = "#222222",
-    accessory = "none",
-    accessoryColor = "#e63946",
-    mouth = "grinning",
-    backgroundColor = "#eef1f6"
-  } = avatar;
-
-  // Main avatar shape. There is no face circle.
-  const avatarShape = `
-    <path
-      d="
-        M30 190
-        L30 92
-        Q30 42 60 18
-        Q100 -8 140 18
-        Q170 42 170 92
-        L170 190
-        Q155 207 132 202
-        L100 190
-        L68 202
-        Q45 207 30 190
-        Z
-      "
-      fill="${hairColor}"
-      stroke="#222"
-      stroke-width="3"
-    />
-  `;
-
-  // Face area inside the avatar shape.
-  const faceArea = `
-    <path
-      d="
-        M53 91
-        Q53 54 100 50
-        Q147 54 147 91
-        L143 143
-        Q137 174 100 181
-        Q63 174 57 143
-        Z
-      "
-      fill="${skinColor}"
-    />
-  `;
-
-  const eyes = `
-    <circle
-      cx="75"
-      cy="111"
-      r="6"
-      fill="${eyeColor}"
-    />
-
-    <circle
-      cx="125"
-      cy="111"
-      r="6"
-      fill="${eyeColor}"
-    />
-  `;
-
-  let mouthGraphic = "";
-
-  if (mouth === "grinning") {
-    mouthGraphic = `
-      <path
-        d="M70 143 Q100 171 130 143 Q126 169 100 174 Q74 169 70 143 Z"
-        fill="#ffffff"
-        stroke="#222"
-        stroke-width="3"
-      />
-    `;
-  }
-
-  if (mouth === "braces") {
-    mouthGraphic = `
-      <path
-        d="M70 143 Q100 171 130 143 Q126 169 100 174 Q74 169 70 143 Z"
-        fill="#ffffff"
-        stroke="#222"
-        stroke-width="3"
-      />
-
-      <path
-        d="
-          M78 151 L78 164
-          M89 157 L89 170
-          M100 160 L100 172
-          M111 157 L111 170
-          M122 151 L122 164
-        "
-        fill="none"
-        stroke="#2563eb"
-        stroke-width="3"
-      />
-    `;
-  }
-
-  if (mouth === "fangs") {
-    mouthGraphic = `
-      <path
-        d="M72 145 Q100 166 128 145 Q123 172 100 174 Q77 172 72 145 Z"
-        fill="#ffffff"
-        stroke="#222"
-        stroke-width="3"
-      />
-
-      <path
-        d="
-          M82 150 L87 166 L93 153
-          M107 153 L113 166 L118 150
-        "
-        fill="#ffffff"
-        stroke="#222"
-        stroke-width="2"
-      />
-    `;
-  }
 
   if (mouth === "frown") {
     mouthGraphic = `
@@ -721,9 +596,15 @@ function createAvatarSVG(avatar) {
 }
 
 document.querySelectorAll("[data-option]").forEach(button => {
-  button.addEventListener("click", () => {
+  button.addEventListener("click", event => {
+    event.preventDefault();
+
     const option = button.dataset.option;
     const value = button.dataset.value;
+
+    if (!Object.prototype.hasOwnProperty.call(avatarChoices, option)) {
+      return;
+    }
 
     avatarChoices[option] = value;
 
@@ -732,17 +613,28 @@ document.querySelectorAll("[data-option]").forEach(button => {
       .forEach(item => item.classList.remove("selected"));
 
     button.classList.add("selected");
-
     updateAvatarPreview();
   });
 });
 
+const accessoryColorInput = document.querySelector("#accessory-color");
+
+if (accessoryColorInput) {
+  accessoryColorInput.addEventListener("input", event => {
+    avatarChoices.accessoryColor = event.target.value;
+    updateAvatarPreview();
+  });
+}
+
 function updateAvatarPreview() {
+  if (!avatarPreview) return;
+
   avatarPreview.innerHTML = createAvatarSVG({
     ...avatarChoices,
     backgroundColor: "#e8eef7"
   });
 }
+
 
 document
   .querySelector('[data-option="skinColor"]')
