@@ -342,12 +342,23 @@ function updateAvatarPreview() {
 
 
 document
-  .querySelector('[data-option="skinColor"]')
-  .classList.add("selected");
+  .querySelector('[data-option="ghostColor"]')
+  ?.classList.add("selected");
 
 document
-  .querySelector('[data-option="hairColor"]')
-  .classList.add("selected");
+  .querySelector('[data-option="eyeColor"]')
+  ?.classList.add("selected");
+
+document
+  .querySelector('[data-option="accessory"]')
+  ?.classList.add("selected");
+
+document
+  .querySelector('[data-option="mouth"]')
+  ?.classList.add("selected");
+
+updateAvatarPreview();
+
 
 document
   .querySelector('[data-option="eyeColor"]')
