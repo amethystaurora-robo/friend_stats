@@ -365,9 +365,13 @@ document.querySelectorAll("[data-accessory]").forEach(button => {
     event.preventDefault();
 
     const type = button.dataset.accessory;
+    
+    selectedAccessoryType = type;
+    
     const existingIndex = avatarChoices.accessories.findIndex(
       accessory => accessory.type === type
     );
+
 
     if (existingIndex !== -1) {
       avatarChoices.accessories.splice(existingIndex, 1);
