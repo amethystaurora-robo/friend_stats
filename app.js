@@ -145,28 +145,7 @@ function createAvatarSVG(avatar = {}) {
         stroke-width="2"
       />
     `;
-  } else if (mouth === "tiger") {
-    mouthGraphic = `
-      <path
-        d="M70 140 Q100 169 130 140 Q125 171 100 176 Q75 171 70 140 Z"
-        fill="#f6a623"
-        stroke="#222"
-        stroke-width="3"
-      />
-      <path
-        d="
-          M78 148 L84 164
-          M90 153 L95 169
-          M110 153 L105 169
-          M122 148 L116 164
-        "
-        fill="none"
-        stroke="#222"
-        stroke-width="4"
-        stroke-linecap="round"
-      />
-    `;
-  }
+  } 
 
   let accessoryGraphic = "";
 
