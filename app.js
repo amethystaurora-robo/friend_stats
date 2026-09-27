@@ -16,8 +16,7 @@ let entries = JSON.parse(localStorage.getItem("entries") || "[]");
 let pointsChart = null;
 
 const avatarChoices = {
-  skinColor: "#f6c7a5",
-  hairColor: "#24160f",
+  ghostColor: "#ff0000",
   eyeColor: "#222222",
   accessory: "none",
   accessoryColor: "#e63946",
@@ -32,8 +31,7 @@ function getAvatarOptions() {
 
 function createAvatarSVG(avatar = {}) {
   const {
-    skinColor = "#f6c7a5",
-    hairColor = "#24160f",
+    ghostColor = "#ff0000",
     eyeColor = "#222222",
     accessory = "none",
     accessoryColor = "#e63946",
@@ -41,45 +39,39 @@ function createAvatarSVG(avatar = {}) {
     backgroundColor = "#eef1f6"
   } = avatar;
 
-  const avatarShape = `
+  /*
+    One complete ghost silhouette.
+
+    The long, flowing lower sections create the ghost's
+    long-hair / floating-ghost appearance.
+  */
+  const ghostShape = `
     <path
       d="
-        M30 190
-        L30 92
-        Q30 42 60 18
-        Q100 -8 140 18
-        Q170 42 170 92
-        L170 190
-        Q155 207 132 202
-        L100 190
-        L68 202
-        Q45 207 30 190
+        M28 190
+        L28 88
+        Q28 42 58 20
+        Q100 -8 142 20
+        Q172 42 172 88
+        L172 190
+
+        Q158 207 143 190
+        Q128 211 112 190
+        Q100 207 88 190
+        Q72 211 57 190
+        Q42 207 28 190
         Z
       "
-      fill="${hairColor}"
+      fill="${ghostColor}"
       stroke="#222"
       stroke-width="3"
-    />
-  `;
-
-  const faceArea = `
-    <path
-      d="
-        M53 91
-        Q53 54 100 50
-        Q147 54 147 91
-        L143 143
-        Q137 174 100 181
-        Q63 174 57 143
-        Z
-      "
-      fill="${skinColor}"
+      stroke-linejoin="round"
     />
   `;
 
   const eyes = `
-    <circle cx="75" cy="111" r="6" fill="${eyeColor}" />
-    <circle cx="125" cy="111" r="6" fill="${eyeColor}" />
+    <circle cx="75" cy="108" r="6" fill="${eyeColor}" />
+    <circle cx="125" cy="108" r="6" fill="${eyeColor}" />
   `;
 
   let mouthGraphic = "";
@@ -87,7 +79,7 @@ function createAvatarSVG(avatar = {}) {
   if (mouth === "grinning") {
     mouthGraphic = `
       <path
-        d="M70 143 Q100 171 130 143 Q126 169 100 174 Q74 169 70 143 Z"
+        d="M70 140 Q100 168 130 140 Q126 166 100 171 Q74 166 70 140 Z"
         fill="#fff"
         stroke="#222"
         stroke-width="3"
@@ -96,14 +88,19 @@ function createAvatarSVG(avatar = {}) {
   } else if (mouth === "braces") {
     mouthGraphic = `
       <path
-        d="M70 143 Q100 171 130 143 Q126 169 100 174 Q74 169 70 143 Z"
+        d="M70 140 Q100 168 130 140 Q126 166 100 171 Q74 166 70 140 Z"
         fill="#fff"
         stroke="#222"
         stroke-width="3"
       />
       <path
-        d="M78 151 L78 164 M89 157 L89 170 M100 160 L100 172
-           M111 157 L111 170 M122 151 L122 164"
+        d="
+          M78 148 L78 161
+          M89 154 L89 167
+          M100 157 L100 169
+          M111 154 L111 167
+          M122 148 L122 161
+        "
         fill="none"
         stroke="#2563eb"
         stroke-width="3"
@@ -112,13 +109,13 @@ function createAvatarSVG(avatar = {}) {
   } else if (mouth === "fangs") {
     mouthGraphic = `
       <path
-        d="M72 145 Q100 166 128 145 Q123 172 100 174 Q77 172 72 145 Z"
+        d="M72 142 Q100 164 128 142 Q123 169 100 171 Q77 169 72 142 Z"
         fill="#fff"
         stroke="#222"
         stroke-width="3"
       />
       <path
-        d="M82 150 L87 166 L93 153 M107 153 L113 166 L118 150"
+        d="M82 147 L87 163 L93 150 M107 150 L113 163 L118 147"
         fill="#fff"
         stroke="#222"
         stroke-width="2"
@@ -127,33 +124,29 @@ function createAvatarSVG(avatar = {}) {
   } else if (mouth === "frown") {
     mouthGraphic = `
       <path
-        d="M78 164 Q100 144 122 164"
+        d="M78 162 Q100 142 122 162"
         fill="none"
         stroke="#222"
         stroke-width="4"
         stroke-linecap="round"
       />
     `;
-  } else if (mouth === "beak") {
-    mouthGraphic = `
-      <path
-        d="M100 137 L78 160 L122 160 Z"
-        fill="#f4a261"
-        stroke="#222"
-        stroke-width="3"
-      />
-    `;
   } else if (mouth === "lion") {
     mouthGraphic = `
       <path
-        d="M69 143 Q100 171 131 143 Q126 176 100 180 Q74 176 69 143 Z"
+        d="M69 140 Q100 168 131 140 Q126 173 100 177 Q74 173 69 140 Z"
         fill="#fff"
         stroke="#222"
         stroke-width="3"
       />
       <path
-        d="M76 148 L82 168 L88 153 L94 172 L100 155
-           L106 172 L112 153 L118 168 L124 148"
+        d="
+          M76 145 L82 165
+          L88 150 L94 169
+          L100 152 L106 169
+          L112 150 L118 165
+          L124 145
+        "
         fill="#fff"
         stroke="#222"
         stroke-width="2"
@@ -163,11 +156,31 @@ function createAvatarSVG(avatar = {}) {
 
   let accessoryGraphic = "";
 
-  if (accessory === "beard") {
+  if (accessory === "glasses") {
+    accessoryGraphic = `
+      <g
+        fill="none"
+        stroke="${accessoryColor}"
+        stroke-width="5"
+      >
+        <rect x="52" y="91" width="43" height="32" rx="8" />
+        <rect x="105" y="91" width="43" height="32" rx="8" />
+        <path d="M95 103 H105" />
+        <path d="M52 102 L40 96" />
+        <path d="M148 102 L160 96" />
+      </g>
+    `;
+  } else if (accessory === "beard") {
     accessoryGraphic = `
       <path
-        d="M64 141 Q70 184 100 193 Q130 184 136 141
-           Q124 153 100 156 Q76 153 64 141 Z"
+        d="
+          M64 139
+          Q70 180 100 190
+          Q130 180 136 139
+          Q124 151 100 154
+          Q76 151 64 139
+          Z
+        "
         fill="${accessoryColor}"
         stroke="#222"
         stroke-width="3"
@@ -184,10 +197,26 @@ function createAvatarSVG(avatar = {}) {
     `;
   } else if (accessory === "top-hat") {
     accessoryGraphic = `
-      <rect x="59" y="24" width="82" height="42" rx="5"
-        fill="${accessoryColor}" stroke="#222" stroke-width="3" />
-      <rect x="47" y="59" width="106" height="13" rx="5"
-        fill="${accessoryColor}" stroke="#222" stroke-width="3" />
+      <rect
+        x="59"
+        y="24"
+        width="82"
+        height="42"
+        rx="5"
+        fill="${accessoryColor}"
+        stroke="#222"
+        stroke-width="3"
+      />
+      <rect
+        x="47"
+        y="59"
+        width="106"
+        height="13"
+        rx="5"
+        fill="${accessoryColor}"
+        stroke="#222"
+        stroke-width="3"
+      />
       <rect x="59" y="51" width="82" height="9" fill="#222" />
     `;
   } else if (accessory === "halo") {
@@ -205,14 +234,26 @@ function createAvatarSVG(avatar = {}) {
   } else if (accessory === "beret") {
     accessoryGraphic = `
       <path
-        d="M48 55 Q67 13 111 15 Q145 17 154 50
-           Q120 61 78 59 Q60 59 48 55 Z"
+        d="
+          M48 55
+          Q67 13 111 15
+          Q145 17 154 50
+          Q120 61 78 59
+          Q60 59 48 55
+          Z
+        "
         fill="${accessoryColor}"
         stroke="#222"
         stroke-width="3"
       />
-      <circle cx="106" cy="22" r="6"
-        fill="${accessoryColor}" stroke="#222" stroke-width="2" />
+      <circle
+        cx="106"
+        cy="22"
+        r="6"
+        fill="${accessoryColor}"
+        stroke="#222"
+        stroke-width="2"
+      />
     `;
   } else if (accessory === "band") {
     accessoryGraphic = `
@@ -222,11 +263,6 @@ function createAvatarSVG(avatar = {}) {
         stroke="${accessoryColor}"
         stroke-width="11"
       />
-    `;
-  } else if (accessory === "nose-stud") {
-    accessoryGraphic = `
-      <circle cx="101" cy="132" r="4"
-        fill="${accessoryColor}" stroke="#222" stroke-width="2" />
     `;
   } else if (accessory === "nose-bullring") {
     accessoryGraphic = `
@@ -246,17 +282,23 @@ function createAvatarSVG(avatar = {}) {
       viewBox="0 0 200 220"
       xmlns="http://www.w3.org/2000/svg"
       role="img"
-      aria-label="Custom avatar"
+      aria-label="Custom ghost avatar"
     >
-      <rect width="200" height="220" rx="24" fill="${backgroundColor}" />
-      ${avatarShape}
-      ${faceArea}
+      <rect
+        width="200"
+        height="220"
+        rx="24"
+        fill="${backgroundColor}"
+      />
+
+      ${ghostShape}
       ${accessoryGraphic}
       ${eyes}
       ${mouthGraphic}
     </svg>
   `;
 }
+
 
 document.querySelectorAll("[data-option]").forEach(button => {
   button.addEventListener("click", event => {
