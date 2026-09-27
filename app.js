@@ -678,6 +678,54 @@ function displayPointsFields() {
   }).join("");
 }
 
+function displayCompetitionFilters() {
+  const typeSelect = document.querySelector(
+    "#competition-type-filter"
+  );
+
+  const avatarSelect = document.querySelector(
+    "#competition-avatar-filter"
+  );
+
+  if (!typeSelect || !avatarSelect) return;
+
+  const currentType = typeSelect.value;
+  const currentAvatar = avatarSelect.value;
+
+  const types = [...new Set(
+    entries
+      .map(entry => entry.type)
+      .filter(Boolean)
+  )].sort();
+
+  typeSelect.innerHTML = `
+    <option value="">All competition types</option>
+    ${types.map(type => `
+      <option value="${escapeHTML(type)}">
+        ${escapeHTML(type)}
+      </option>
+    `).join("")}
+  `;
+
+  avatarSelect.innerHTML = `
+    <option value="">All avatars</option>
+    ${avatars.map(avatar => `
+      <option value="${escapeHTML(avatar.id)}">
+        ${escapeHTML(avatar.name)}
+      </option>
+    `).join("")}
+  `;
+
+  if (types.includes(currentType)) {
+    typeSelect.value = currentType;
+  }
+
+  if (avatars.some(avatar => avatar.id === currentAvatar)) {
+    avatarSelect.value = currentAvatar;
+  }
+}
+
+
 function displayComparisonOptions() {
   if (!avatarOneSelect || !avatarTwoSelect) return;
 
