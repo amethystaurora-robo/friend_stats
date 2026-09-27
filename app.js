@@ -15,13 +15,14 @@ let avatars = JSON.parse(localStorage.getItem("avatars") || "[]");
 let entries = JSON.parse(localStorage.getItem("entries") || "[]");
 let pointsChart = null;
 
-const avatarChoices = {
-  ghostColor: "#ff0000",
-  eyeColor: "#222222",
-  accessory: "none",
-  accessoryColor: "#ff0000",
-  mouth: "grinning"
-};
+const {
+  ghostColor = "#ff0000",
+  eyeColor = "#222222",
+  accessory = "none",
+  accessoryColor = "#ff0000",
+  mouth = "grinning",
+  backgroundColor = "#eef1f6"
+} = avatar;
 
 
 function getAvatarOptions() {
