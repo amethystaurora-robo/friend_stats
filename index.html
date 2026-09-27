@@ -493,28 +493,42 @@
 
     <section class="panel">
       <h2>Competition history</h2>
-      <div class="competition-filters">
-  <label for="competition-type-filter">
-    Competition type
-  </label>
-
-  <select id="competition-type-filter">
-    <option value="">All competition types</option>
-  </select>
-
+<div class="competition-filters">
   <label for="competition-avatar-filter">
-    Avatar
+    Avatars
   </label>
 
-  <select id="competition-avatar-filter">
-    <option value="">All avatars</option>
+  <select id="competition-avatar-filter" multiple size="5">
+    <!-- Populated by JavaScript -->
   </select>
 
-  <button type="button" id="clear-competition-filters">
-    Clear filters
+  <label for="competition-type-filter">
+    Competition types
+  </label>
+
+  <select id="competition-type-filter" multiple size="5">
+    <!-- Populated by JavaScript -->
+  </select>
+
+  <button
+    type="button"
+    id="display-competitions-button"
+  >
+    Display competitions
+  </button>
+
+  <button
+    type="button"
+    id="clear-competition-filters"
+  >
+    Clear
   </button>
 </div>
-      <div id="entry-list"></div>
+
+<div id="entry-list">
+  <p>Select filters and click “Display competitions.”</p>
+</div>
+
     </section>
   </main>
 
