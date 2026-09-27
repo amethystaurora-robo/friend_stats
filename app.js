@@ -33,6 +33,24 @@ function ensureAvatarIds() {
 
 ensureAvatarIds();
 
+function ensureEntryIds() {
+  let changed = false;
+
+  entries.forEach(entry => {
+    if (!entry.id) {
+      entry.id = createId();
+      changed = true;
+    }
+  });
+
+  if (changed) {
+    saveData();
+  }
+}
+
+ensureEntryIds();
+
+
 avatars.forEach(avatar => {
   competitionSelection.add(avatar.id);
 });
@@ -169,7 +187,7 @@ function createAvatarSVG(avatar = {}) {
         stroke-width="2"
       />
     `;
-  } else if (avatar.mouth === "tongue") {
+  } else if (mouth === "tongue") {
   mouthGraphic = `
     <path
       d="M76 126 Q100 143 124 126 Q120 153 100 156 Q80 153 76 126 Z"
@@ -191,7 +209,7 @@ function createAvatarSVG(avatar = {}) {
       stroke-width="2"
     />
   `;
-} else if (avatar.mouth === "missing-tooth") {
+} else if (mouth === "missing-tooth") {
   mouthGraphic = `
     <path
       d="M76 130 Q100 145 124 130 Q120 151 100 153 Q80 151 76 130 Z"
@@ -601,6 +619,7 @@ function saveData() {
   localStorage.setItem("entries", JSON.stringify(entries));
 }
 
+
 function createId() {
   return Date.now().toString();
 }
@@ -700,6 +719,8 @@ document.addEventListener("change", event => {
       pointsInput.value = "0";
     }
   }
+});
+
 
   displayPointsFields();
 });
@@ -720,23 +741,40 @@ function displayEntries() {
   entryList.innerHTML = sortedEntries.map(entry => {
     const results = entry.results.map(result => `
       <li>
-        ${getAvatarName(result.avatarId)}:
-        <strong>${result.points} points</strong>
+        ${escapeHTML(getAvatarName(result.avatarId))}:
+        <strong>${Number(result.points)} points</strong>
       </li>
     `).join("");
 
     return `
-      <article class="entry">
-        <h3>${entry.type}</h3>
-        <p><strong>Date:</strong> ${entry.date}</p>
+      <article class="entry" data-entry-id="${entry.id}">
+        <h3>${escapeHTML(entry.type || "Competition")}</h3>
+
+        <p>
+          <strong>Date:</strong>
+          ${escapeHTML(entry.date || "")}
+        </p>
+
         <ul>${results}</ul>
-        ${entry.notes
-          ? `<p><strong>Notes:</strong> ${entry.notes}</p>`
-          : ""}
+
+        ${
+          entry.notes
+            ? `<p><strong>Notes:</strong> ${escapeHTML(entry.notes)}</p>`
+            : ""
+        }
+
+        <button
+          type="button"
+          class="delete-entry-button"
+          data-delete-entry="${entry.id}"
+        >
+          Delete competition
+        </button>
       </article>
     `;
   }).join("");
 }
+
 
 function getChartColor(index) {
   const colors = [
@@ -818,9 +856,6 @@ function displayAvatars() {
   }
 
   avatarList.innerHTML = avatars.map(avatar => {
-    /*
-      Compatibility for avatars saved before the multi-accessory update.
-    */
     const normalizedAvatar = {
       ...avatar,
       accessories: Array.isArray(avatar.accessories)
@@ -829,16 +864,35 @@ function displayAvatars() {
     };
 
     return `
-      <article class="avatar-card">
+      <article class="avatar-card" data-avatar-id="${avatar.id}">
         ${createAvatarSVG(normalizedAvatar)}
-        <h3>${avatar.name}</h3>
+
+        <h3>${escapeHTML(avatar.name)}</h3>
+
         <p class="total">
           ${calculateTotalPoints(avatar.id)} points
         </p>
+
+        <button
+          type="button"
+          class="delete-avatar-button"
+          data-delete-avatar="${avatar.id}"
+        >
+          Delete avatar
+        </button>
       </article>
     `;
   }).join("");
 }
+function escapeHTML(value) {
+  return String(value ?? "")
+    .replaceAll("&", "&amp;")
+    .replaceAll("<", "&lt;")
+    .replaceAll(">", "&gt;")
+    .replaceAll('"', "&quot;")
+    .replaceAll("'", "&#039;");
+}
+
 
 function refreshPage() {
   displayAvatars();
@@ -969,13 +1023,73 @@ if (compareButton) {
     `;
   });
 }
+function deleteAvatar(avatarId) {
+  const avatar = avatars.find(item => item.id === avatarId);
+
+  if (!avatar) return;
+
+  const confirmed = confirm(
+    `Delete "${avatar.name}"? This cannot be undone.`
+  );
+
+  if (!confirmed) return;
+
+  avatars = avatars.filter(item => item.id !== avatarId);
+
+  competitionSelection.delete(avatarId);
+
+  
+
+  saveData();
+  refreshPage();
+}
+
+function deleteEntry(entryId) {
+  const entry = entries.find(item => item.id === entryId);
+
+  if (!entry) return;
+
+  const confirmed = confirm(
+    "Delete this competition? This cannot be undone."
+  );
+
+  if (!confirmed) return;
+
+  entries = entries.filter(item => item.id !== entryId);
+
+  saveData();
+  refreshPage();
+}
+document.addEventListener("click", event => {
+  const avatarButton = event.target.closest("[data-delete-avatar]");
+
+  if (avatarButton) {
+    deleteAvatar(avatarButton.dataset.deleteAvatar);
+    return;
+  }
+
+  const entryButton = event.target.closest("[data-delete-entry]");
+
+  if (entryButton) {
+    deleteEntry(entryButton.dataset.deleteEntry);
+  }
+});
+
 
 updateAccessoryButtonStates();
 updateAccessoryColorStates();
 updateAvatarPreview();
-entryForm.reset();
+if (entryForm) {
+  entryForm.reset();
+}
 
+entries.push(entry);
+saveData();
+
+entryForm.reset();
 competitionSelection.clear();
+refreshPage();
+
 
 avatars.forEach(avatar => {
   avatar.points = calculateTotalPoints(avatar.id);
