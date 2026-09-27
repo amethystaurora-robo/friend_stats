@@ -438,3 +438,68 @@ button:disabled {
   background: #8f1d14;
 }
 
+.competition-filters {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: end;
+  gap: 0.75rem;
+  margin-bottom: 1rem;
+}
+
+.competition-filters label {
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+  font-weight: 600;
+}
+
+.competition-filters select,
+.competition-filters button {
+  min-height: 2.4rem;
+  padding: 0.45rem 0.7rem;
+  border: 1px solid #cbd5e1;
+  border-radius: 0.5rem;
+  background: #fff;
+}
+
+.entry {
+  margin-bottom: 0.75rem;
+  border: 1px solid #d8dee9;
+  border-radius: 0.75rem;
+  background: #fff;
+  overflow: hidden;
+}
+
+.entry summary {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 0.5rem 1rem;
+  padding: 1rem;
+  cursor: pointer;
+  list-style-position: inside;
+}
+
+.entry summary:hover {
+  background: #f5f7fb;
+}
+
+.entry-title {
+  font-weight: 700;
+}
+
+.entry-summary {
+  color: #64748b;
+  font-size: 0.9rem;
+}
+
+.entry-content {
+  padding: 0 1rem 1rem;
+  border-top: 1px solid #e2e8f0;
+}
+
+.entry-content ul {
+  margin-top: 1rem;
+}
+
+
