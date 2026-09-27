@@ -884,7 +884,7 @@ function displayAvatars() {
         <button
           type="button"
           class="delete-avatar-button"
-          ddata-delete-avatar="${escapeHTML(avatar.id)}"
+          data-delete-avatar="${escapeHTML(avatar.id)}"
         >
           Delete avatar
         </button>
