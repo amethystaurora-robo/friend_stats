@@ -1044,13 +1044,21 @@ function deleteAvatar(avatarId) {
 
   avatars = avatars.filter(item => item.id !== avatarId);
 
-  competitionSelection.delete(avatarId);
+  entries = entries
+    .map(entry => ({
+      ...entry,
+      results: Array.isArray(entry.results)
+        ? entry.results.filter(result => result.avatarId !== avatarId)
+        : []
+    }))
+    .filter(entry => entry.results.length > 0);
 
-  
+  competitionSelection.delete(avatarId);
 
   saveData();
   refreshPage();
 }
+
 
 function deleteEntry(entryId) {
   const entry = entries.find(item => item.id === entryId);
