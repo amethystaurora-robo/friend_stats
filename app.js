@@ -16,14 +16,14 @@ let pointsChart = null;
 const avatarPreview = document.querySelector("#avatar-preview");
 
 function createAvatarSVG(avatar) {
-  const {
-    skinColor = "#f6c7a5",
-    hairColor = "#24160f",
-    eyeColor = "#222222",
-    accessory = "none",
-    accessoryColor = "#e63946",
-    mouth = "smile",
-    backgroundColor = "#eef1f6"
+  const avatarChoices = {
+    skinColor: "#f6c7a5",
+    hairColor: "#24160f",
+    eyeColor: "#222222",
+    accessory: "none",
+    accessoryColor: "#e63946",
+    mouth: "grinning"
+  };
   } = avatar;
 
   /*
