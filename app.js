@@ -19,9 +19,10 @@ const avatarChoices = {
   ghostColor: "#ff0000",
   eyeColor: "#222222",
   accessory: "none",
-  accessoryColor: "#e63946",
+  accessoryColor: "#ff0000",
   mouth: "grinning"
 };
+
 
 function getAvatarOptions() {
   return {
