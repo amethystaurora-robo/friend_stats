@@ -145,7 +145,46 @@ function createAvatarSVG(avatar = {}) {
         stroke-width="2"
       />
     `;
-  } 
+  } else if (avatar.mouth === "tongue") {
+  mouthGraphic = `
+    <path
+      d="M76 126 Q100 143 124 126 Q120 153 100 156 Q80 153 76 126 Z"
+      fill="#7d2635"
+      stroke="#222"
+      stroke-width="2"
+    />
+
+    <path
+      d="M88 146 Q100 137 112 146 Q110 157 100 159 Q90 157 88 146 Z"
+      fill="#f07886"
+      stroke="#222"
+      stroke-width="2"
+    />
+
+    <path
+      d="M100 145 L100 157"
+      stroke="#b94b5b"
+      stroke-width="2"
+    />
+  `;
+} else if (avatar.mouth === "missing-tooth") {
+  mouthGraphic = `
+    <path
+      d="M76 130 Q100 145 124 130 Q120 151 100 153 Q80 151 76 130 Z"
+      fill="#54202b"
+      stroke="#222"
+      stroke-width="2"
+    />
+
+    <path
+      d="M91 132 Q97 130 103 133 L102 143 Q97 146 92 142 Z"
+      fill="#fff"
+      stroke="#222"
+      stroke-width="1.5"
+    />
+  `;
+}
+
 
   let accessoryGraphic = "";
 
@@ -164,6 +203,62 @@ function createAvatarSVG(avatar = {}) {
       />
     `;
   }
+
+  if (accessoryMap.has("earrings")) {
+  const color = accessoryMap.get("earrings");
+
+  accessoryGraphic += `
+    <!-- Left earring -->
+    <circle
+      cx="57"
+      cy="124"
+      r="7"
+      fill="none"
+      stroke="${color}"
+      stroke-width="4"
+    />
+
+    <!-- Right earring -->
+    <circle
+      cx="143"
+      cy="124"
+      r="7"
+      fill="none"
+      stroke="${color}"
+      stroke-width="4"
+    />
+  `;
+}
+
+if (accessoryMap.has("eyepatch")) {
+  const color = accessoryMap.get("eyepatch");
+
+  accessoryGraphic += `
+    <path
+      d="M61 88 Q75 76 89 88 L86 106 Q75 113 64 106 Z"
+      fill="${color}"
+      stroke="#222"
+      stroke-width="2"
+    />
+
+    <path
+      d="M62 87 L47 70"
+      fill="none"
+      stroke="${color}"
+      stroke-width="4"
+      stroke-linecap="round"
+    />
+
+    <path
+      d="M88 87 L103 70"
+      fill="none"
+      stroke="${color}"
+      stroke-width="4"
+      stroke-linecap="round"
+    />
+  `;
+}
+
 
   if (accessoryMap.has("horn")) {
     const color = accessoryMap.get("horn");
