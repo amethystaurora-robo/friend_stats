@@ -75,85 +75,106 @@ function createAvatarSVG(avatar = {}) {
     <circle cx="125" cy="108" r="6" fill="${eyeColor}" />
   `;
 
-  let mouthGraphic = "";
+ let mouthGraphic = "";
 
-  if (mouth === "grinning") {
-    mouthGraphic = `
-      <path
-        d="M70 140 Q100 168 130 140 Q126 166 100 171 Q74 166 70 140 Z"
-        fill="#fff"
-        stroke="#222"
-        stroke-width="3"
-      />
-    `;
-  } else if (mouth === "braces") {
-    mouthGraphic = `
-      <path
-        d="M70 140 Q100 168 130 140 Q126 166 100 171 Q74 166 70 140 Z"
-        fill="#fff"
-        stroke="#222"
-        stroke-width="3"
-      />
-      <path
-        d="
-          M78 148 L78 161
-          M89 154 L89 167
-          M100 157 L100 169
-          M111 154 L111 167
-          M122 148 L122 161
-        "
-        fill="none"
-        stroke="#2563eb"
-        stroke-width="3"
-      />
-    `;
-  } else if (mouth === "fangs") {
-    mouthGraphic = `
-      <path
-        d="M72 142 Q100 164 128 142 Q123 169 100 171 Q77 169 72 142 Z"
-        fill="#fff"
-        stroke="#222"
-        stroke-width="3"
-      />
-      <path
-        d="M82 147 L87 163 L93 150 M107 150 L113 163 L118 147"
-        fill="#fff"
-        stroke="#222"
-        stroke-width="2"
-      />
-    `;
-  } else if (mouth === "frown") {
-    mouthGraphic = `
-      <path
-        d="M78 162 Q100 142 122 162"
-        fill="none"
-        stroke="#222"
-        stroke-width="4"
-        stroke-linecap="round"
-      />
-    `;
-  } else if (mouth === "lion") {
-    mouthGraphic = `
-      <path
-        d="M69 140 Q100 168 131 140 Q126 173 100 177 Q74 173 69 140 Z"
-        fill="#fff"
-        stroke="#222"
-        stroke-width="3"
-      />
-      <path
-        d="
-          M76 145 L82 165
-          L88 150 L94 169
-          L100 152 L106 169
-          L112 150 L118 165
-          L124 145
-        "
-        fill="#fff"
-        stroke="#222"
-        stroke-width="2"
-      />
-    `;
-  }
+if (mouth === "grinning") {
+  mouthGraphic = `
+    <path
+      d="M68 139 Q100 174 132 139 Q127 172 100 177 Q73 172 68 139 Z"
+      fill="#fff"
+      stroke="#222"
+      stroke-width="3"
+    />
+  `;
+} else if (mouth === "smile") {
+  mouthGraphic = `
+    <path
+      d="M76 148 Q100 168 124 148"
+      fill="none"
+      stroke="#222"
+      stroke-width="5"
+      stroke-linecap="round"
+    />
+  `;
+} else if (mouth === "frown") {
+  mouthGraphic = `
+    <path
+      d="M76 166 Q100 143 124 166"
+      fill="none"
+      stroke="#222"
+      stroke-width="5"
+      stroke-linecap="round"
+    />
+  `;
+} else if (mouth === "braces") {
+  mouthGraphic = `
+    <path
+      d="M68 139 Q100 174 132 139 Q127 172 100 177 Q73 172 68 139 Z"
+      fill="#fff"
+      stroke="#222"
+      stroke-width="3"
+    />
+
+    <path
+      d="
+        M78 148 V164
+        M89 155 V171
+        M100 157 V173
+        M111 155 V171
+        M122 148 V164
+      "
+      fill="none"
+      stroke="#2563eb"
+      stroke-width="3"
+    />
+  `;
+} else if (mouth === "fangs") {
+  mouthGraphic = `
+    <path
+      d="M70 141 Q100 170 130 141 Q125 171 100 176 Q75 171 70 141 Z"
+      fill="#fff"
+      stroke="#222"
+      stroke-width="3"
+    />
+
+    <path
+      d="M80 146 L87 166 L94 151"
+      fill="#fff"
+      stroke="#222"
+      stroke-width="2"
+    />
+
+    <path
+      d="M106 151 L113 166 L120 146"
+      fill="#fff"
+      stroke="#222"
+      stroke-width="2"
+    />
+  `;
+} else if (mouth === "tiger") {
+  mouthGraphic = `
+    <path
+      d="M70 140 Q100 169 130 140 Q125 171 100 176 Q75 171 70 140 Z"
+      fill="#f6a623"
+      stroke="#222"
+      stroke-width="3"
+    />
+
+    <path
+      d="
+        M78 148 L84 164
+        M90 153 L95 169
+        M110 153 L105 169
+        M122 148 L116 164
+      "
+      fill="none"
+      stroke="#222"
+      stroke-width="4"
+      stroke-linecap="round"
+    />
+  `;
+}
+
 
   let accessoryGraphic = "";
 
