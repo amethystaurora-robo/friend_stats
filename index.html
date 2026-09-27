@@ -18,90 +18,279 @@
   </header>
 
   <main>
-<form id="avatar-form">
-  <input
-    id="avatar-name"
-    type="text"
-    placeholder="Avatar name"
-    required
-  >
+<section class="panel avatar-builder">
+  <h2>Create an Avatar</h2>
 
-  <h3>Skin color</h3>
-  <div id="skin-options" class="choice-grid">
-    <button type="button" class="color-choice" data-option="skinColor" data-value="#f6c7a5" style="background:#f6c7a5"></button>
-    <button type="button" class="color-choice" data-option="skinColor" data-value="#e0a77a" style="background:#e0a77a"></button>
-    <button type="button" class="color-choice" data-option="skinColor" data-value="#b97850" style="background:#b97850"></button>
-    <button type="button" class="color-choice" data-option="skinColor" data-value="#75452f" style="background:#75452f"></button>
-  </div>
+  <form id="avatarForm">
+    <label for="avatarName">Avatar name</label>
+    <input
+      id="avatarName"
+      name="avatarName"
+      type="text"
+      placeholder="Enter avatar name"
+      required
+    >
 
-<h3>Hair color</h3>
-<div id="hair-color-options" class="choice-grid">
-  <button type="button" class="color-choice" data-option="hairColor" data-value="#f5d547" style="background:#f5d547" title="Yellow"></button>
-  <button type="button" class="color-choice" data-option="hairColor" data-value="#ffffff" style="background:#ffffff" title="White"></button>
-  <button type="button" class="color-choice" data-option="hairColor" data-value="#9ca3af" style="background:#9ca3af" title="Gray"></button>
-  <button type="button" class="color-choice" data-option="hairColor" data-value="#000000" style="background:#000000" title="Black"></button>
-  <button type="button" class="color-choice" data-option="hairColor" data-value="#6b3e26" style="background:#6b3e26" title="Brown"></button>
-  <button type="button" class="color-choice" data-option="hairColor" data-value="#e87524" style="background:#e87524" title="Orange"></button>
-</div>
+    <div class="avatar-builder-layout">
+      <div class="avatar-options">
 
+        <fieldset>
+          <legend>Skin color</legend>
 
-<h3>Hair style</h3>
-<div class="style-options">
-  <button
-    type="button"
-    class="style-choice"
-    data-option="hairStyle"
-    data-value="short"
-  >
-    Short
-  </button>
+          <div class="choice-grid">
+            <button
+              type="button"
+              class="choice color-choice selected"
+              data-option="skinColor"
+              data-value="#f6c7a5"
+              style="--choice-color: #f6c7a5"
+              aria-label="Light skin"
+            ></button>
 
-  <button
-    type="button"
-    class="style-choice"
-    data-option="hairStyle"
-    data-value="long"
-  >
-    Long
-  </button>
+            <button
+              type="button"
+              class="choice color-choice"
+              data-option="skinColor"
+              data-value="#e7a977"
+              style="--choice-color: #e7a977"
+              aria-label="Tan skin"
+            ></button>
 
-  <button
-    type="button"
-    class="style-choice"
-    data-option="hairStyle"
-    data-value="none"
-  >
-    None
-  </button>
-</div>
+            <button
+              type="button"
+              class="choice color-choice"
+              data-option="skinColor"
+              data-value="#ae7048"
+              style="--choice-color: #ae7048"
+              aria-label="Brown skin"
+            ></button>
 
+            <button
+              type="button"
+              class="choice color-choice"
+              data-option="skinColor"
+              data-value="#70432f"
+              style="--choice-color: #70432f"
+              aria-label="Dark skin"
+            ></button>
+          </div>
+        </fieldset>
 
-  <h3>Eye color</h3>
-  <div class="choice-grid">
-    <button type="button" class="color-choice" data-option="eyeColor" data-value="#222222" style="background:#222222"></button>
-    <button type="button" class="color-choice" data-option="eyeColor" data-value="#356aa0" style="background:#356aa0"></button>
-    <button type="button" class="color-choice" data-option="eyeColor" data-value="#4c8c4a" style="background:#4c8c4a"></button>
-    <button type="button" class="color-choice" data-option="eyeColor" data-value="#795548" style="background:#795548"></button>
-  </div>
+        <fieldset>
+          <legend>Hair color</legend>
 
-  <h3>Accessory</h3>
-  <div class="style-options">
-    <button type="button" class="style-choice" data-option="accessory" data-value="none">
-      None
-    </button>
+          <div class="choice-grid">
+            <button
+              type="button"
+              class="choice color-choice selected"
+              data-option="hairColor"
+              data-value="#24160f"
+              style="--choice-color: #24160f"
+              aria-label="Black hair"
+            ></button>
 
-    <button type="button" class="style-choice" data-option="accessory" data-value="glasses">
-      Glasses
-    </button>
+            <button
+              type="button"
+              class="choice color-choice"
+              data-option="hairColor"
+              data-value="#f4d35e"
+              style="--choice-color: #f4d35e"
+              aria-label="Yellow hair"
+            ></button>
 
-    <button type="button" class="style-choice" data-option="accessory" data-value="headband">
-      Headband
-    </button>
+            <button
+              type="button"
+              class="choice color-choice"
+              data-option="hairColor"
+              data-value="#ffffff"
+              style="--choice-color: #ffffff"
+              aria-label="White hair"
+            ></button>
 
-    <button type="button" class="style-choice" data-option="accessory" data-value="crown">
-      Crown
-    </button>
-  </div>
+            <button
+              type="button"
+              class="choice color-choice"
+              data-option="hairColor"
+              data-value="#999999"
+              style="--choice-color: #999999"
+              aria-label="Gray hair"
+            ></button>
+
+            <button
+              type="button"
+              class="choice color-choice"
+              data-option="hairColor"
+              data-value="#8b4513"
+              style="--choice-color: #8b4513"
+              aria-label="Brown hair"
+            ></button>
+
+            <button
+              type="button"
+              class="choice color-choice"
+              data-option="hairColor"
+              data-value="#f28c28"
+              style="--choice-color: #f28c28"
+              aria-label="Orange hair"
+            ></button>
+          </div>
+        </fieldset>
+
+        <fieldset>
+          <legend>Eye color</legend>
+
+          <div class="choice-grid">
+            <button
+              type="button"
+              class="choice color-choice selected"
+              data-option="eyeColor"
+              data-value="#222222"
+              style="--choice-color: #222222"
+              aria-label="Black eyes"
+            ></button>
+
+            <button
+              type="button"
+              class="choice color-choice"
+              data-option="eyeColor"
+              data-value="#2563eb"
+              style="--choice-color: #2563eb"
+              aria-label="Blue eyes"
+            ></button>
+
+            <button
+              type="button"
+              class="choice color-choice"
+              data-option="eyeColor"
+              data-value="#16a34a"
+              style="--choice-color: #16a34a"
+              aria-label="Green eyes"
+            ></button>
+
+            <button
+              type="button"
+              class="choice color-choice"
+              data-option="eyeColor"
+              data-value="#dc2626"
+              style="--choice-color: #dc2626"
+              aria-label="Red eyes"
+            ></button>
+          </div>
+        </fieldset>
+
+        <fieldset>
+          <legend>Accessory</legend>
+
+          <div class="text-choice-grid">
+            <button type="button" class="choice text-choice selected"
+              data-option="accessory" data-value="none">
+              None
+            </button>
+
+            <button type="button" class="choice text-choice"
+              data-option="accessory" data-value="beard">
+              Beard
+            </button>
+
+            <button type="button" class="choice text-choice"
+              data-option="accessory" data-value="unicorn">
+              Unicorn
+            </button>
+
+            <button type="button" class="choice text-choice"
+              data-option="accessory" data-value="top-hat">
+              Top hat
+            </button>
+
+            <button type="button" class="choice text-choice"
+              data-option="accessory" data-value="halo">
+              Halo
+            </button>
+
+            <button type="button" class="choice text-choice"
+              data-option="accessory" data-value="beret">
+              Beret
+            </button>
+
+            <button type="button" class="choice text-choice"
+              data-option="accessory" data-value="band">
+              Band
+            </button>
+
+            <button type="button" class="choice text-choice"
+              data-option="accessory" data-value="nose-stud">
+              Nose stud
+            </button>
+
+            <button type="button" class="choice text-choice"
+              data-option="accessory" data-value="nose-bullring">
+              Bullring
+            </button>
+          </div>
+        </fieldset>
+
+        <fieldset>
+          <legend>Accessory color</legend>
+
+          <input
+            id="accessoryColor"
+            type="color"
+            value="#e63946"
+            aria-label="Accessory color"
+          >
+        </fieldset>
+
+        <fieldset>
+          <legend>Mouth</legend>
+
+          <div class="text-choice-grid">
+            <button type="button" class="choice text-choice selected"
+              data-option="mouth" data-value="grinning">
+              Grinning
+            </button>
+
+            <button type="button" class="choice text-choice"
+              data-option="mouth" data-value="braces">
+              Braces
+            </button>
+
+            <button type="button" class="choice text-choice"
+              data-option="mouth" data-value="fangs">
+              Fangs
+            </button>
+
+            <button type="button" class="choice text-choice"
+              data-option="mouth" data-value="frown">
+              Frown
+            </button>
+
+            <button type="button" class="choice text-choice"
+              data-option="mouth" data-value="beak">
+              Beak
+            </button>
+
+            <button type="button" class="choice text-choice"
+              data-option="mouth" data-value="lion">
+              Lion
+            </button>
+          </div>
+        </fieldset>
+
+        <button type="submit" class="primary-button">
+          Create avatar
+        </button>
+      </div>
+
+      <div class="preview-container">
+        <h3>Preview</h3>
+        <div id="avatarPreview"></div>
+      </div>
+    </div>
+  </form>
+
+  <div id="avatarList" class="avatar-list"></div>
+</section>
+
 
   <h3>Preview</h3>
   <div id="avatar-preview"></div>
