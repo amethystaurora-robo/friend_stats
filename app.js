@@ -14,6 +14,30 @@ let avatars = JSON.parse(localStorage.getItem("avatars") || "[]");
 let entries = JSON.parse(localStorage.getItem("entries") || "[]");
 let pointsChart = null;
 
+let competitionSelection = new Set();
+
+function ensureAvatarIds() {
+  let changed = false;
+
+  avatars.forEach(avatar => {
+    if (!avatar.id) {
+      avatar.id = createId();
+      changed = true;
+    }
+  });
+
+  if (changed) {
+    saveData();
+  }
+}
+
+ensureAvatarIds();
+
+avatars.forEach(avatar => {
+  competitionSelection.add(avatar.id);
+});
+
+
 const avatarChoices = {
   ghostColor: "#ff0000",
   eyeColor: "#222222",
@@ -604,24 +628,35 @@ function displayPointsFields() {
     return;
   }
 
-  pointsFields.innerHTML = avatars.map(avatar => `
-    <div class="points-row">
-      <label for="points-${avatar.id}">
-        ${avatar.name}
-      </label>
+  pointsFields.innerHTML = avatars.map(avatar => {
+    const selected = competitionSelection.has(avatar.id);
 
-      <input
-        id="points-${avatar.id}"
-        class="avatar-points"
-        data-avatar-id="${avatar.id}"
-        type="number"
-        min="0"
-        step="0.01"
-        value="0"
-        required
-      >
-    </div>
-  `).join("");
+    return `
+      <div class="points-row">
+        <label>
+          <input
+            type="checkbox"
+            class="competition-avatar-checkbox"
+            data-competition-avatar="${avatar.id}"
+            ${selected ? "checked" : ""}
+          >
+
+          ${avatar.name}
+        </label>
+
+        <input
+          id="points-${avatar.id}"
+          class="avatar-points"
+          data-avatar-id="${avatar.id}"
+          type="number"
+          min="0"
+          step="0.01"
+          value="0"
+          ${selected ? "" : "disabled"}
+        >
+      </div>
+    `;
+  }).join("");
 }
 
 function displayComparisonOptions() {
@@ -638,6 +673,37 @@ function displayComparisonOptions() {
     avatarTwoSelect.selectedIndex = 1;
   }
 }
+
+document.addEventListener("change", event => {
+  const checkbox = event.target.closest(
+    "[data-competition-avatar]"
+  );
+
+  if (!checkbox) return;
+
+  const avatarId = checkbox.dataset.competitionAvatar;
+  const pointsInput = document.querySelector(
+    `.avatar-points[data-avatar-id="${avatarId}"]`
+  );
+
+  if (checkbox.checked) {
+    competitionSelection.add(avatarId);
+
+    if (pointsInput) {
+      pointsInput.disabled = false;
+    }
+  } else {
+    competitionSelection.delete(avatarId);
+
+    if (pointsInput) {
+      pointsInput.disabled = true;
+      pointsInput.value = "0";
+    }
+  }
+
+  displayPointsFields();
+});
+
 
 function displayEntries() {
   if (!entryList) return;
@@ -798,10 +864,13 @@ if (avatarForm) {
     };
 
     avatars.push(avatar);
+    competitionSelection.add(avatar.id);
+    
     saveData();
-
+    
     avatarForm.reset();
     refreshPage();
+
   });
 }
 
@@ -813,13 +882,24 @@ if (entryForm) {
       alert("Create at least one avatar first.");
       return;
     }
-
+    
     const results = [
       ...document.querySelectorAll(".avatar-points")
-    ].map(input => ({
-      avatarId: input.dataset.avatarId,
-      points: Number(input.value)
-    }));
+    ]
+      .filter(input =>
+        competitionSelection.has(input.dataset.avatarId)
+      )
+      .map(input => ({
+        avatarId: input.dataset.avatarId,
+        points: Number(input.value)
+      }));
+
+    if (results.length < 2) {
+  alert("Select at least two avatars for the competition.");
+  return;
+}
+
+
 
     const entry = {
       id: createId(),
@@ -893,4 +973,11 @@ if (compareButton) {
 updateAccessoryButtonStates();
 updateAccessoryColorStates();
 updateAvatarPreview();
+entryForm.reset();
+
+competitionSelection.clear();
+
+avatars.forEach(avatar => {
+  avatar.points = calculateTotalPoints(avatar.id);
+});
 refreshPage();
