@@ -678,6 +678,35 @@ function displayPointsFields() {
   }).join("");
 }
 
+const competitionTypeFilter = document.querySelector(
+  "#competition-type-filter"
+);
+
+const competitionAvatarFilter = document.querySelector(
+  "#competition-avatar-filter"
+);
+
+const clearCompetitionFilters = document.querySelector(
+  "#clear-competition-filters"
+);
+
+competitionTypeFilter?.addEventListener("change", displayEntries);
+
+competitionAvatarFilter?.addEventListener("change", displayEntries);
+
+clearCompetitionFilters?.addEventListener("click", () => {
+  if (competitionTypeFilter) {
+    competitionTypeFilter.value = "";
+  }
+
+  if (competitionAvatarFilter) {
+    competitionAvatarFilter.value = "";
+  }
+
+  displayEntries();
+});
+
+
 function displayCompetitionFilters() {
   const typeSelect = document.querySelector(
     "#competition-type-filter"
@@ -1003,9 +1032,11 @@ function refreshPage() {
   displayAvatars();
   displayPointsFields();
   displayComparisonOptions();
+  displayCompetitionFilters();
   displayEntries();
   updateChart();
 }
+
 
 if (avatarForm) {
   avatarForm.addEventListener("submit", event => {
