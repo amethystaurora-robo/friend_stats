@@ -208,15 +208,31 @@ if (mouth === "grinning") {
         stroke-width="3"
       />
     `;
-  } else if (accessory === "horn") {
-    accessoryGraphic = `
-      <path
-        d="M100 48 L86 8 L114 8 Z"
-        fill="${accessoryColor}"
-        stroke="#222"
-        stroke-width="3"
-      />
-    `;
+  } } else if (accessory === "horn") {
+  accessoryGraphic = `
+    <path
+      d="
+        M100 76
+        C94 62 87 45 91 9
+        C99 22 108 31 116 38
+        C111 51 106 64 100 76
+        Z
+      "
+      fill="${accessoryColor}"
+      stroke="#222"
+      stroke-width="3"
+      stroke-linejoin="round"
+    />
+
+    <path
+      d="M94 24 L108 34 M92 39 L105 48 M94 55 L101 60"
+      fill="none"
+      stroke="#fff"
+      stroke-width="3"
+      opacity="0.75"
+    />
+  `;
+}
   } else if (accessory === "top-hat") {
     accessoryGraphic = `
       <rect
