@@ -682,7 +682,9 @@ function displayComparisonOptions() {
   if (!avatarOneSelect || !avatarTwoSelect) return;
 
   const options = avatars.map(avatar => `
-    <option value="${avatar.id}">${avatar.name}</option>
+    <option value="${escapeHTML(avatar.id)}">
+      ${escapeHTML(avatar.name)}
+    </option>
   `).join("");
 
   avatarOneSelect.innerHTML = options;
@@ -723,7 +725,6 @@ document.addEventListener("change", event => {
 
 
   displayPointsFields();
-});
 
 
 function displayEntries() {
@@ -747,7 +748,11 @@ function displayEntries() {
     `).join("");
 
     return `
-      <article class="entry" data-entry-id="${entry.id}">
+     <article
+  class="entry"
+  data-entry-id="${escapeHTML(entry.id)}"
+>
+
         <h3>${escapeHTML(entry.type || "Competition")}</h3>
 
         <p>
@@ -766,7 +771,7 @@ function displayEntries() {
         <button
           type="button"
           class="delete-entry-button"
-          data-delete-entry="${entry.id}"
+          data-delete-entry="${escapeHTML(entry.id)}"
         >
           Delete competition
         </button>
@@ -864,7 +869,10 @@ function displayAvatars() {
     };
 
     return `
-      <article class="avatar-card" data-avatar-id="${avatar.id}">
+      <article
+  class="avatar-card"
+  data-avatar-id="${escapeHTML(avatar.id)}"
+>
         ${createAvatarSVG(normalizedAvatar)}
 
         <h3>${escapeHTML(avatar.name)}</h3>
@@ -876,7 +884,7 @@ function displayAvatars() {
         <button
           type="button"
           class="delete-avatar-button"
-          data-delete-avatar="${avatar.id}"
+          ddata-delete-avatar="${escapeHTML(avatar.id)}"
         >
           Delete avatar
         </button>
@@ -971,7 +979,7 @@ if (entryForm) {
 
     entries.push(entry);
     saveData();
-
+    competitionSelection.clear();
     entryForm.reset();
     refreshPage();
   });
@@ -1075,19 +1083,9 @@ document.addEventListener("click", event => {
   }
 });
 
-
 updateAccessoryButtonStates();
 updateAccessoryColorStates();
 updateAvatarPreview();
-if (entryForm) {
-  entryForm.reset();
-}
-
-entries.push(entry);
-saveData();
-
-entryForm.reset();
-competitionSelection.clear();
 refreshPage();
 
 
