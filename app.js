@@ -187,7 +187,7 @@ function createAvatarSVG(avatar = {}) {
         stroke-width="3"
       />
     `;
-  } else if (accessory === "unicorn") {
+  } else if (accessory === "horn") {
     accessoryGraphic = `
       <path
         d="M100 48 L86 8 L114 8 Z"
