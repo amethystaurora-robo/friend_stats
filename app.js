@@ -15,6 +15,8 @@ let entries = JSON.parse(localStorage.getItem("entries") || "[]");
 let pointsChart = null;
 
 let competitionSelection = new Set();
+let competitionsAreVisible = false;
+
 
 function ensureAvatarIds() {
   let changed = false;
@@ -807,18 +809,55 @@ document.addEventListener("change", event => {
 function displayEntries() {
   if (!entryList) return;
 
-  if (entries.length === 0) {
-    entryList.innerHTML = "<p>No competitions recorded yet.</p>";
+  if (!competitionsAreVisible) {
+    entryList.innerHTML = `
+      <p>
+        Select avatars or competition types, then click
+        “Display competitions.”
+      </p>
+    `;
     return;
   }
 
-  const typeFilter = document.querySelector(
-    "#competition-type-filter"
-  )?.value || "";
-
   const avatarFilter = document.querySelector(
     "#competition-avatar-filter"
-  )?.value || "";
+  );
+
+  const typeFilter = document.querySelector(
+    "#competition-type-filter"
+  );
+
+  const selectedAvatarValues = avatarFilter
+    ? [...avatarFilter.selectedOptions].map(option => option.value)
+    : [];
+
+  const selectedTypeValues = typeFilter
+    ? [...typeFilter.selectedOptions].map(option => option.value)
+    : [];
+
+  const allAvatarsSelected =
+    selectedAvatarValues.includes("all");
+
+  const selectedAvatarIds = new Set(
+    selectedAvatarValues.filter(value => value !== "all")
+  );
+
+  const selectedTypes = new Set(selectedTypeValues);
+
+  const hasAvatarFilter =
+    !allAvatarsSelected && selectedAvatarIds.size > 0;
+
+  const hasTypeFilter = selectedTypes.size > 0;
+
+  // Prevent displaying everything when no filters were selected.
+  if (!hasAvatarFilter && !hasTypeFilter) {
+    entryList.innerHTML = `
+      <p>
+        Select at least one avatar or competition type.
+      </p>
+    `;
+    return;
+  }
 
   const filteredEntries = [...entries]
     .filter(entry => {
@@ -826,21 +865,162 @@ function displayEntries() {
         ? entry.results
         : [];
 
-      const matchesType =
-        !typeFilter || entry.type === typeFilter;
-
       const matchesAvatar =
-        !avatarFilter ||
-        results.some(result => result.avatarId === avatarFilter);
+        !hasAvatarFilter ||
+        results.some(result =>
+          selectedAvatarIds.has(result.avatarId)
+        );
 
-      return matchesType && matchesAvatar;
+      const matchesType =
+        !hasTypeFilter ||
+        selectedTypes.has(String(entry.type || "").trim());
+
+      // Avatar and type filters are combined with AND.
+      return matchesAvatar && matchesType;
     })
     .sort((a, b) => new Date(b.date) - new Date(a.date));
 
   if (filteredEntries.length === 0) {
-    entryList.innerHTML = "<p>No competitions match these filters.</p>";
+    entryList.innerHTML = `
+      <p>No competitions match the selected filters.</p>
+    `;
     return;
   }
+
+  entryList.innerHTML = filteredEntries.map(entry => {
+    const results = Array.isArray(entry.results)
+      ? entry.results
+      : [];
+
+    const totalPoints = results.reduce(
+      (total, result) =>
+        total + Number(result.points || 0),
+      0
+    );
+
+    const resultItems = results.map(result => `
+      <li>
+        ${escapeHTML(getAvatarName(result.avatarId))}:
+        <strong>${Number(result.points || 0)} points</strong>
+      </li>
+    `).join("");
+
+    return `
+      <details
+        class="entry"
+        data-entry-id="${escapeHTML(entry.id)}"
+      >
+        <summary>
+          <span class="entry-title">
+            ${escapeHTML(entry.type || "Competition")}
+          </span>
+
+          <span class="entry-summary">
+            ${escapeHTML(entry.date || "")}
+            · ${results.length} competitors
+            · ${totalPoints} total points
+          </span>
+        </summary>
+
+        <div class="entry-content">
+          <ul>
+            ${resultItems || "<li>No results recorded.</li>"}
+          </ul>
+
+          ${
+            entry.notes
+              ? `
+                <p>
+                  <strong>Notes:</strong>
+                  ${escapeHTML(entry.notes)}
+                </p>
+              `
+              : ""
+          }
+
+          <button
+            type="button"
+            class="delete-entry-button"
+            data-delete-entry="${escapeHTML(entry.id)}"
+          >
+            Delete competition
+          </button>
+        </div>
+      </details>
+    `;
+  }).join("");
+}
+
+const displayCompetitionsButton = document.querySelector(
+  "#display-competitions-button"
+);
+
+displayCompetitionsButton?.addEventListener("click", () => {
+  const avatarFilter = document.querySelector(
+    "#competition-avatar-filter"
+  );
+
+  const typeFilter = document.querySelector(
+    "#competition-type-filter"
+  );
+
+  const selectedAvatars = avatarFilter
+    ? [...avatarFilter.selectedOptions]
+    : [];
+
+  const selectedTypes = typeFilter
+    ? [...typeFilter.selectedOptions]
+    : [];
+
+  const allAvatarsSelected = selectedAvatars.some(
+    option => option.value === "all"
+  );
+
+  const hasAvatarFilter =
+    allAvatarsSelected ||
+    selectedAvatars.length > 0;
+
+  const hasTypeFilter = selectedTypes.length > 0;
+
+  if (!hasAvatarFilter && !hasTypeFilter) {
+    competitionsAreVisible = false;
+    displayEntries();
+    return;
+  }
+
+  competitionsAreVisible = true;
+  displayEntries();
+});
+
+const clearCompetitionFilters = document.querySelector(
+  "#clear-competition-filters"
+);
+
+clearCompetitionFilters?.addEventListener("click", () => {
+  const avatarFilter = document.querySelector(
+    "#competition-avatar-filter"
+  );
+
+  const typeFilter = document.querySelector(
+    "#competition-type-filter"
+  );
+
+  if (avatarFilter) {
+    [...avatarFilter.options].forEach(option => {
+      option.selected = false;
+    });
+  }
+
+  if (typeFilter) {
+    [...typeFilter.options].forEach(option => {
+      option.selected = false;
+    });
+  }
+
+  competitionsAreVisible = false;
+  displayEntries();
+});
+
 
   entryList.innerHTML = filteredEntries.map(entry => {
     const results = Array.isArray(entry.results)
@@ -1038,6 +1218,7 @@ function refreshPage() {
 }
 
 
+
 if (avatarForm) {
   avatarForm.addEventListener("submit", event => {
     event.preventDefault();
@@ -1186,6 +1367,94 @@ function deleteAvatar(avatarId) {
   saveData();
   refreshPage();
 }
+
+function displayCompetitionFilters() {
+  const avatarFilter = document.querySelector(
+    "#competition-avatar-filter"
+  );
+
+  const typeFilter = document.querySelector(
+    "#competition-type-filter"
+  );
+
+  if (!avatarFilter || !typeFilter) return;
+
+  const selectedAvatarIds = new Set(
+    [...avatarFilter.selectedOptions].map(option => option.value)
+  );
+
+  const selectedTypes = new Set(
+    [...typeFilter.selectedOptions].map(option => option.value)
+  );
+
+  avatarFilter.innerHTML = `
+    <option value="all">All avatars</option>
+    ${avatars.map(avatar => `
+      <option value="${escapeHTML(avatar.id)}">
+        ${escapeHTML(avatar.name)}
+      </option>
+    `).join("")}
+  `;
+
+  const competitionTypes = [
+    ...new Set(
+      entries
+        .map(entry => String(entry.type || "").trim())
+        .filter(Boolean)
+    )
+  ].sort((a, b) => a.localeCompare(b));
+
+  typeFilter.innerHTML = competitionTypes.map(type => `
+    <option value="${escapeHTML(type)}">
+      ${escapeHTML(type)}
+    </option>
+  `).join("");
+
+  [...avatarFilter.options].forEach(option => {
+    if (
+      selectedAvatarIds.has(option.value) &&
+      option.value !== "all"
+    ) {
+      option.selected = true;
+    }
+  });
+
+  [...typeFilter.options].forEach(option => {
+    option.selected = selectedTypes.has(option.value);
+  });
+}
+const competitionAvatarFilter = document.querySelector(
+  "#competition-avatar-filter"
+);
+
+competitionAvatarFilter?.addEventListener("change", event => {
+  const select = event.currentTarget;
+  const allOption = [...select.options].find(
+    option => option.value === "all"
+  );
+
+  if (!allOption) return;
+
+  const selectedValues = [...select.selectedOptions]
+    .map(option => option.value);
+
+  if (selectedValues.includes("all")) {
+    [...select.options].forEach(option => {
+      option.selected = option.value === "all";
+    });
+  } else if (
+    selectedValues.length === select.options.length - 1
+  ) {
+    allOption.selected = true;
+
+    [...select.options].forEach(option => {
+      if (option.value !== "all") {
+        option.selected = false;
+      }
+    });
+  }
+});
+
 
 
 function deleteEntry(entryId) {
