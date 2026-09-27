@@ -735,50 +735,99 @@ function displayEntries() {
     return;
   }
 
-  const sortedEntries = [...entries].sort(
-    (a, b) => new Date(b.date) - new Date(a.date)
-  );
+  const typeFilter = document.querySelector(
+    "#competition-type-filter"
+  )?.value || "";
 
-  entryList.innerHTML = sortedEntries.map(entry => {
-    const results = entry.results.map(result => `
+  const avatarFilter = document.querySelector(
+    "#competition-avatar-filter"
+  )?.value || "";
+
+  const filteredEntries = [...entries]
+    .filter(entry => {
+      const results = Array.isArray(entry.results)
+        ? entry.results
+        : [];
+
+      const matchesType =
+        !typeFilter || entry.type === typeFilter;
+
+      const matchesAvatar =
+        !avatarFilter ||
+        results.some(result => result.avatarId === avatarFilter);
+
+      return matchesType && matchesAvatar;
+    })
+    .sort((a, b) => new Date(b.date) - new Date(a.date));
+
+  if (filteredEntries.length === 0) {
+    entryList.innerHTML = "<p>No competitions match these filters.</p>";
+    return;
+  }
+
+  entryList.innerHTML = filteredEntries.map(entry => {
+    const results = Array.isArray(entry.results)
+      ? entry.results
+      : [];
+
+    const totalPoints = results.reduce(
+      (total, result) => total + Number(result.points || 0),
+      0
+    );
+
+    const resultItems = results.map(result => `
       <li>
         ${escapeHTML(getAvatarName(result.avatarId))}:
-        <strong>${Number(result.points)} points</strong>
+        <strong>${Number(result.points || 0)} points</strong>
       </li>
     `).join("");
 
     return `
-     <article
-  class="entry"
-  data-entry-id="${escapeHTML(entry.id)}"
->
+      <details
+        class="entry"
+        data-entry-id="${escapeHTML(entry.id)}"
+      >
+        <summary>
+          <span class="entry-title">
+            ${escapeHTML(entry.type || "Competition")}
+          </span>
 
-        <h3>${escapeHTML(entry.type || "Competition")}</h3>
+          <span class="entry-summary">
+            ${escapeHTML(entry.date || "")}
+            · ${results.length} competitors
+            · ${totalPoints} total points
+          </span>
+        </summary>
 
-        <p>
-          <strong>Date:</strong>
-          ${escapeHTML(entry.date || "")}
-        </p>
+        <div class="entry-content">
+          <ul>
+            ${resultItems || "<li>No results recorded.</li>"}
+          </ul>
 
-        <ul>${results}</ul>
+          ${
+            entry.notes
+              ? `
+                <p>
+                  <strong>Notes:</strong>
+                  ${escapeHTML(entry.notes)}
+                </p>
+              `
+              : ""
+          }
 
-        ${
-          entry.notes
-            ? `<p><strong>Notes:</strong> ${escapeHTML(entry.notes)}</p>`
-            : ""
-        }
-
-        <button
-          type="button"
-          class="delete-entry-button"
-          data-delete-entry="${escapeHTML(entry.id)}"
-        >
-          Delete competition
-        </button>
-      </article>
+          <button
+            type="button"
+            class="delete-entry-button"
+            data-delete-entry="${escapeHTML(entry.id)}"
+          >
+            Delete competition
+          </button>
+        </div>
+      </details>
     `;
   }).join("");
 }
+
 
 
 function getChartColor(index) {
