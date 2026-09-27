@@ -220,9 +220,39 @@ button:hover {
     0 0 0 4px #253b80;
 }
 
-.color-choice[data-value="#ffffff"] {
-  border-color: #c7ccd6;
+button:focus-visible,
+input:focus-visible,
+textarea:focus-visible,
+select:focus-visible {
+  outline: 3px solid #6d8df7;
+  outline-offset: 2px;
 }
+
+button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.primary-button {
+  width: 100%;
+  margin-top: 0.5rem;
+}
+
+.avatar-options fieldset + fieldset {
+  margin-top: 0;
+}
+
+#avatar-preview {
+  min-height: 200px;
+  overflow: visible;
+}
+
+#points-chart {
+  display: block;
+  width: 100%;
+  max-height: 400px;
+}
+
 
 .text-choice {
   width: auto;
