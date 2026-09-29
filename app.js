@@ -210,7 +210,111 @@ function createAvatarSVG(avatar = {}) {
     `;
   }
 
-let eyeGraphic = "";
+
+if (mouth === "tongue") {
+  mouthGraphic = `
+
+      <!-- Tongue -->
+    <path
+      d="M78 151
+         Q100 139 122 151
+         Q119 177 100 180
+         Q81 177 78 151 Z"
+      fill="#f07886"
+      stroke="#222"
+      stroke-width="2"
+    />
+
+    <!-- Tongue center line -->
+    <path
+      d="M100 151 Q100 164 100 176"
+      fill="none"
+      stroke="#b84f61"
+      stroke-width="2"
+      stroke-linecap="round"
+    />
+
+    <!-- Large mouth -->
+    <path
+      d="M68 139 Q100 174 132 139
+         Q127 172 100 177
+         Q73 172 68 139 Z"
+      fill="#54202b"
+      stroke="#222"
+      stroke-width="3"
+    />
+
+ `;
+}
+
+if (mouth === "missing-tooth") {
+  mouthGraphic = `
+<path
+  d="M68 139
+     Q100 174 132 139
+     Q127 172 100 177
+     Q73 172 68 139 Z"
+  fill="#54202b"
+  stroke="#222"
+  stroke-width="3"
+/>
+
+<!-- Tooth inside the mouth -->
+<path
+  d="M91 143
+     Q100 140 109 143
+     L108 157
+     Q100 161 92 157 Z"
+  fill="#fff"
+  stroke="#222"
+  stroke-width="2"
+/>
+  `;
+}
+
+
+  if (mouth === "braces") {
+    mouthGraphic = `
+      <path
+        d="M68 139 Q100 174 132 139
+           Q127 172 100 177
+           Q73 172 68 139 Z"
+        fill="white"
+        stroke="#222"
+        stroke-width="3"
+      />
+      <path
+        d="M78 148 V164 M89 155 V171
+           M100 157 V173 M111 155 V171
+           M122 148 V164"
+        fill="none"
+        stroke="#2563eb"
+        stroke-width="3"
+      />
+    `;
+  }
+
+  if (mouth === "fangs") {
+    mouthGraphic = `
+      <path
+        d="M70 141 Q100 170 130 141
+           Q125 171 100 176
+           Q75 171 70 141 Z"
+        fill="white"
+        stroke="#222"
+        stroke-width="3"
+      />
+      <path
+        d="M80 146 L87 166 L94 151
+           M106 151 L113 166 L120 146"
+        fill="white"
+        stroke="#222"
+        stroke-width="2"
+      />
+    `;
+  }
+
+   let eyeGraphic = "";
 
 if (eyeStyle === "normal") {
   eyeGraphic = `
@@ -328,107 +432,6 @@ if (eyeStyle === "tired") {
   `;
 }
 
-
-if (mouth === "tongue") {
-  mouthGraphic = `
-    <!-- Large mouth -->
-    <path
-      d="M68 139 Q100 174 132 139
-         Q127 172 100 177
-         Q73 172 68 139 Z"
-      fill="#54202b"
-      stroke="#222"
-      stroke-width="3"
-    />
-
-    <!-- Tongue -->
-    <path
-      d="M78 151
-         Q100 139 122 151
-         Q119 177 100 180
-         Q81 177 78 151 Z"
-      fill="#f07886"
-      stroke="#222"
-      stroke-width="2"
-    />
-
-    <!-- Tongue center line -->
-    <path
-      d="M100 151 Q100 164 100 176"
-      fill="none"
-      stroke="#b84f61"
-      stroke-width="2"
-      stroke-linecap="round"
-    />
-  `;
-}
-
-if (mouth === "missing-tooth") {
-  mouthGraphic = `
-<path
-  d="M68 139
-     Q100 174 132 139
-     Q127 172 100 177
-     Q73 172 68 139 Z"
-  fill="#54202b"
-  stroke="#222"
-  stroke-width="3"
-/>
-
-<!-- Tooth inside the mouth -->
-<path
-  d="M91 143
-     Q100 140 109 143
-     L108 157
-     Q100 161 92 157 Z"
-  fill="#fff"
-  stroke="#222"
-  stroke-width="2"
-/>
-  `;
-}
-
-
-  if (mouth === "braces") {
-    mouthGraphic = `
-      <path
-        d="M68 139 Q100 174 132 139
-           Q127 172 100 177
-           Q73 172 68 139 Z"
-        fill="white"
-        stroke="#222"
-        stroke-width="3"
-      />
-      <path
-        d="M78 148 V164 M89 155 V171
-           M100 157 V173 M111 155 V171
-           M122 148 V164"
-        fill="none"
-        stroke="#2563eb"
-        stroke-width="3"
-      />
-    `;
-  }
-
-  if (mouth === "fangs") {
-    mouthGraphic = `
-      <path
-        d="M70 141 Q100 170 130 141
-           Q125 171 100 176
-           Q75 171 70 141 Z"
-        fill="white"
-        stroke="#222"
-        stroke-width="3"
-      />
-      <path
-        d="M80 146 L87 166 L94 151
-           M106 151 L113 166 L120 146"
-        fill="white"
-        stroke="#222"
-        stroke-width="2"
-      />
-    `;
-  }
 
   let accessoryGraphic = "";
 
