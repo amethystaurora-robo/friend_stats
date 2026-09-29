@@ -345,9 +345,6 @@ if (eyeStyle === "big-irises") {
       stroke-width="3"
     />
 
-    <circle cx="75" cy="110" r="10" fill="${eyeColor}"/>
-    <circle cx="125" cy="110" r="10" fill="${eyeColor}"/>
-
     <circle cx="78" cy="106" r="3" fill="white"/>
     <circle cx="128" cy="106" r="3" fill="white"/>
   `;
@@ -579,7 +576,7 @@ if (eyeStyle === "tired") {
   if (accessoryMap.has("earrings")) {
     accessoryGraphic += `
       <circle
-        cx="26" cy="130" r="7"
+        cx="30" cy="130" r="7"
         fill="${accessoryMap.get("earrings")}"
         stroke="${accessoryMap.get("earrings")}"
         stroke-width="4"
@@ -1244,14 +1241,22 @@ compareButton?.addEventListener("click", () => {
   const secondId = avatarTwoSelect?.value;
 
   if (!firstId || !secondId) {
-    comparisonResult.textContent =
-      "Create at least two avatars first.";
+    if (comparisonResult) {
+      comparisonResult.textContent =
+        "Create at least two avatars first.";
+    }
+
+    updateChart([]);
     return;
   }
 
   if (firstId === secondId) {
-    comparisonResult.textContent =
-      "Choose two different avatars.";
+    if (comparisonResult) {
+      comparisonResult.textContent =
+        "Choose two different avatars.";
+    }
+
+    updateChart([]);
     return;
   }
 
@@ -1267,44 +1272,15 @@ compareButton?.addEventListener("click", () => {
     return;
   }
 
-  const firstTotal =
-    calculateTotalPoints(firstId);
+  // Change the graph to show only these two avatars.
+  updateChart([firstId, secondId]);
 
-  const secondTotal =
-    calculateTotalPoints(secondId);
-
-  const difference = Math.abs(
-    firstTotal - secondTotal
-  );
-
-  let message;
-
-  if (firstTotal > secondTotal) {
-    message =
-      `${firstAvatar.name} is ahead by ` +
-      `${difference} points.`;
-  } else if (secondTotal > firstTotal) {
-    message =
-      `${secondAvatar.name} is ahead by ` +
-      `${difference} points.`;
-  } else {
-    message = "The avatars are tied.";
+  // Optional: clear the old text summary.
+  if (comparisonResult) {
+    comparisonResult.textContent = "";
   }
-
-  comparisonResult.innerHTML = `
-    <p>
-      ${escapeHTML(firstAvatar.name)}:
-      ${firstTotal} points
-    </p>
-
-    <p>
-      ${escapeHTML(secondAvatar.name)}:
-      ${secondTotal} points
-    </p>
-
-    <p>${escapeHTML(message)}</p>
-  `;
 });
+
 
 /* =========================================================
    COMPETITION FORM
@@ -1994,7 +1970,7 @@ function getChartColor(index) {
   return colors[index % colors.length];
 }
 
-function updateChart() {
+function updateChart(selectedAvatarIds = null) {
   if (
     !chartCanvas ||
     typeof Chart === "undefined"
@@ -2002,17 +1978,31 @@ function updateChart() {
     return;
   }
 
-  const labels = [
-    ...new Set(entries.map(entry => entry.date))
-  ]
-    .filter(Boolean)
-    .sort();
+  const selectedIds = selectedAvatarIds
+    ? new Set(selectedAvatarIds)
+    : null;
 
-  const datasets = avatars.map((avatar, index) => {
+  const sortedEntries = [...entries]
+    .filter(entry => entry.date)
+    .sort((a, b) => {
+      return new Date(a.date) - new Date(b.date);
+    });
+
+  const labels = [
+    ...new Set(
+      sortedEntries.map(entry => entry.date)
+    )
+  ];
+
+  const avatarsToDisplay = avatars.filter(avatar => {
+    return !selectedIds || selectedIds.has(avatar.id);
+  });
+
+  const datasets = avatarsToDisplay.map((avatar, index) => {
     let runningTotal = 0;
 
     const data = labels.map(date => {
-      entries
+      sortedEntries
         .filter(entry => entry.date === date)
         .forEach(entry => {
           const results = Array.isArray(entry.results)
@@ -2024,9 +2014,7 @@ function updateChart() {
           );
 
           if (result) {
-            runningTotal += Number(
-              result.points || 0
-            );
+            runningTotal += Number(result.points || 0);
           }
         });
 
@@ -2038,7 +2026,8 @@ function updateChart() {
       data,
       borderColor: getChartColor(index),
       backgroundColor: getChartColor(index),
-      tension: 0.2
+      tension: 0.2,
+      fill: false
     };
   });
 
@@ -2056,15 +2045,32 @@ function updateChart() {
       },
       options: {
         responsive: true,
+        maintainAspectRatio: false,
         scales: {
           y: {
-            beginAtZero: true
+            beginAtZero: true,
+            title: {
+              display: true,
+              text: "Cumulative points"
+            }
+          },
+          x: {
+            title: {
+              display: true,
+              text: "Competition date"
+            }
+          }
+        },
+        plugins: {
+          legend: {
+            display: true
           }
         }
       }
     }
   );
 }
+
 
 /* =========================================================
    REFRESH AND INITIALISATION
