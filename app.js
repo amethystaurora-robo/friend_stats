@@ -365,26 +365,26 @@ if (mouth === "tongue") {
 
 if (mouth === "missing-tooth") {
   mouthGraphic = `
-    <!-- Large mouth -->
-    <path
-      d="M68 139 Q100 174 132 139
-         Q127 172 100 177
-         Q73 172 68 139 Z"
-      fill="#54202b"
-      stroke="#222"
-      stroke-width="3"
-    />
+<path
+  d="M68 139
+     Q100 174 132 139
+     Q127 172 100 177
+     Q73 172 68 139 Z"
+  fill="#54202b"
+  stroke="#222"
+  stroke-width="3"
+/>
 
-    <!-- Missing tooth / remaining tooth -->
-    <path
-      d="M88 140
-         Q100 135 112 140
-         L110 157
-         Q100 163 90 157 Z"
-      fill="white"
-      stroke="#222"
-      stroke-width="2"
-    />
+<!-- Tooth inside the mouth -->
+<path
+  d="M91 143
+     Q100 140 109 143
+     L108 157
+     Q100 161 92 157 Z"
+  fill="#fff"
+  stroke="#222"
+  stroke-width="2"
+/>
   `;
 }
 
