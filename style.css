@@ -455,12 +455,23 @@ button:disabled {
 
 .competition-filters select,
 .competition-filters button {
+  width: auto;
   min-height: 2.4rem;
-  padding: 0.45rem 0.7rem;
-  border: 1px solid #cbd5e1;
+  padding: 0.65rem 1rem;
+  border: none;
   border-radius: 0.5rem;
-  background: #fff;
+
+  font: inherit;
+  font-weight: bold;
+  color: white;
+  background: #253b80;
+  cursor: pointer;
 }
+
+.competition-filters button:hover {
+  background: #18295c;
+}
+
 
 .entry {
   margin-bottom: 0.75rem;
