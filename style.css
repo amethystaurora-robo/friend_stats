@@ -502,4 +502,48 @@ button:disabled {
   margin-top: 1rem;
 }
 
+.avatar-actions,
+.entry-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  justify-content: center;
+  margin-top: 0.75rem;
+}
+
+.avatar-actions button,
+.entry-actions button {
+  width: auto;
+  padding: 0.5rem 0.75rem;
+}
+
+.edit-avatar-button,
+.edit-entry-button {
+  background: #2563eb;
+}
+
+.edit-avatar-button:hover,
+.edit-entry-button:hover {
+  background: #1d4ed8;
+}
+
+.delete-avatar-button,
+.delete-entry-button {
+  background: #b42318;
+}
+
+.delete-avatar-button:hover,
+.delete-entry-button:hover {
+  background: #8f1d14;
+}
+
+.cancel-button {
+  background: #64748b;
+}
+
+.cancel-button:hover {
+  background: #475569;
+}
+
+
 
