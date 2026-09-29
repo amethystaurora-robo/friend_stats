@@ -545,5 +545,77 @@ button:disabled {
   background: #475569;
 }
 
+/* Competition action buttons */
+.entry-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  margin-top: 1rem;
+}
+
+.entry-actions button,
+.avatar-actions button {
+  display: inline-block;
+  width: auto;
+  min-width: 150px;
+  padding: 0.65rem 1rem;
+
+  border: 0;
+  border-radius: 0.5rem;
+
+  font: inherit;
+  font-size: 0.95rem;
+  font-weight: 600;
+  line-height: 1.2;
+  text-align: center;
+
+  color: #ffffff;
+  background: #2563eb;
+  cursor: pointer;
+  opacity: 1;
+  visibility: visible;
+}
+
+.entry-actions button:hover,
+.avatar-actions button:hover {
+  background: #1d4ed8;
+}
+
+.entry-actions .delete-entry-button,
+.avatar-actions .delete-avatar-button {
+  background: #dc2626;
+}
+
+.entry-actions .delete-entry-button:hover,
+.avatar-actions .delete-avatar-button:hover {
+  background: #b91c1c;
+}
+
+.entry-actions .edit-entry-button,
+.avatar-actions .edit-avatar-button {
+  background: #2563eb;
+}
+
+.cancel-button {
+  display: inline-block;
+  width: auto;
+  margin-top: 0.75rem;
+  padding: 0.65rem 1rem;
+
+  border: 0;
+  border-radius: 0.5rem;
+
+  font: inherit;
+  font-weight: 600;
+  color: #ffffff;
+  background: #6b7280;
+  cursor: pointer;
+}
+
+.cancel-button:hover {
+  background: #4b5563;
+}
+
+
 
 
