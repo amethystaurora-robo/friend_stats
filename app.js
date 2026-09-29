@@ -451,13 +451,13 @@ if (mouth === "missing-tooth") {
   if (accessoryMap.has("earrings")) {
     accessoryGraphic += `
       <circle
-        cx="32" cy="124" r="7"
-        fill="none"
+        cx="26" cy="130" r="7"
+        fill="${accessoryMap.get("earrings")}"
         stroke="${accessoryMap.get("earrings")}"
         stroke-width="4"
       />
       <circle
-        cx="162" cy="124" r="7"
+        cx="170" cy="130" r="7"
         fill="none"
         stroke="${accessoryMap.get("earrings")}"
         stroke-width="4"
