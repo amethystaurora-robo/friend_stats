@@ -1273,7 +1273,7 @@ compareButton?.addEventListener("click", () => {
   }
 
   // Change the graph to show only these two avatars.
-  updateChart([firstId, secondId]);
+  updateChart([firstId, secondId],true);
 
   // Optional: clear the old text summary.
   if (comparisonResult) {
@@ -1970,7 +1970,10 @@ function getChartColor(index) {
   return colors[index % colors.length];
 }
 
-function updateChart(selectedAvatarIds = null) {
+function updateChart(
+  selectedAvatarIds = null,
+  sharedCompetitionsOnly = false
+) {
   if (
     !chartCanvas ||
     typeof Chart === "undefined"
@@ -1982,27 +1985,54 @@ function updateChart(selectedAvatarIds = null) {
     ? new Set(selectedAvatarIds)
     : null;
 
-  const sortedEntries = [...entries]
+  let chartEntries = [...entries]
     .filter(entry => entry.date)
     .sort((a, b) => {
       return new Date(a.date) - new Date(b.date);
     });
 
+  // During a comparison, keep only competitions where
+  // both selected avatars participated.
+  if (
+    sharedCompetitionsOnly &&
+    selectedAvatarIds?.length === 2
+  ) {
+    const [firstId, secondId] = selectedAvatarIds;
+
+    chartEntries = chartEntries.filter(entry => {
+      const results = Array.isArray(entry.results)
+        ? entry.results
+        : [];
+
+      const participatedIds = new Set(
+        results.map(result => result.avatarId)
+      );
+
+      return (
+        participatedIds.has(firstId) &&
+        participatedIds.has(secondId)
+      );
+    });
+  }
+
   const labels = [
     ...new Set(
-      sortedEntries.map(entry => entry.date)
+      chartEntries.map(entry => entry.date)
     )
   ];
 
   const avatarsToDisplay = avatars.filter(avatar => {
-    return !selectedIds || selectedIds.has(avatar.id);
+    return (
+      !selectedIds ||
+      selectedIds.has(avatar.id)
+    );
   });
 
   const datasets = avatarsToDisplay.map((avatar, index) => {
     let runningTotal = 0;
 
     const data = labels.map(date => {
-      sortedEntries
+      chartEntries
         .filter(entry => entry.date === date)
         .forEach(entry => {
           const results = Array.isArray(entry.results)
@@ -2014,7 +2044,9 @@ function updateChart(selectedAvatarIds = null) {
           );
 
           if (result) {
-            runningTotal += Number(result.points || 0);
+            runningTotal += Number(
+              result.points || 0
+            );
           }
         });
 
@@ -2057,7 +2089,7 @@ function updateChart(selectedAvatarIds = null) {
           x: {
             title: {
               display: true,
-              text: "Competition date"
+              text: "Shared competition date"
             }
           }
         },
