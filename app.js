@@ -53,9 +53,11 @@ const competitionSelection = new Set(
 const avatarChoices = {
   ghostColor: "#ff0000",
   eyeColor: "#222222",
+  eyeStyle: "normal",
   mouth: "grinning",
   accessories: []
 };
+
 
 let selectedAccessoryType = null;
 
@@ -157,6 +159,7 @@ function createAvatarSVG(avatar = {}) {
   const ghostColor = avatar.ghostColor || "#ff0000";
   const eyeColor = avatar.eyeColor || "#222222";
   const mouth = avatar.mouth || "grinning";
+  const eyeStyle = avatar.eyeStyle || "normal";
   const accessories = Array.isArray(avatar.accessories)
     ? avatar.accessories
     : [];
@@ -206,6 +209,125 @@ function createAvatarSVG(avatar = {}) {
       />
     `;
   }
+
+let eyeGraphic = "";
+
+if (eyeStyle === "normal") {
+  eyeGraphic = `
+    <circle cx="75" cy="108" r="6" fill="${eyeColor}"/>
+    <circle cx="125" cy="108" r="6" fill="${eyeColor}"/>
+  `;
+}
+
+if (eyeStyle === "big-irises") {
+  eyeGraphic = `
+    <ellipse
+      cx="75" cy="108"
+      rx="15"
+      ry="19"
+      fill="white"
+      stroke="#222"
+      stroke-width="3"
+    />
+    <ellipse
+      cx="125" cy="108"
+      rx="15"
+      ry="19"
+      fill="white"
+      stroke="#222"
+      stroke-width="3"
+    />
+
+    <circle cx="75" cy="110" r="10" fill="${eyeColor}"/>
+    <circle cx="125" cy="110" r="10" fill="${eyeColor}"/>
+
+    <circle cx="78" cy="106" r="3" fill="white"/>
+    <circle cx="128" cy="106" r="3" fill="white"/>
+  `;
+}
+
+if (eyeStyle === "stoned") {
+  eyeGraphic = `
+    <path
+      d="M52 99 Q75 119 98 99"
+      fill="white"
+      stroke="#222"
+      stroke-width="3"
+    />
+    <path
+      d="M102 99 Q125 119 148 99"
+      fill="white"
+      stroke="#222"
+      stroke-width="3"
+    />
+
+    <ellipse
+      cx="75"
+      cy="105"
+      rx="8"
+      ry="10"
+      fill="${eyeColor}"
+    />
+    <ellipse
+      cx="125"
+      cy="105"
+      rx="8"
+      ry="10"
+      fill="${eyeColor}"
+    />
+
+    <path
+      d="M52 99 Q75 87 98 99"
+      fill="none"
+      stroke="#222"
+      stroke-width="5"
+      stroke-linecap="round"
+    />
+    <path
+      d="M102 99 Q125 87 148 99"
+      fill="none"
+      stroke="#222"
+      stroke-width="5"
+      stroke-linecap="round"
+    />
+  `;
+}
+
+if (eyeStyle === "tired") {
+  eyeGraphic = `
+    <path
+      d="M54 106 Q75 96 96 106"
+      fill="none"
+      stroke="#222"
+      stroke-width="5"
+      stroke-linecap="round"
+    />
+    <path
+      d="M104 106 Q125 96 146 106"
+      fill="none"
+      stroke="#222"
+      stroke-width="5"
+      stroke-linecap="round"
+    />
+
+    <path
+      d="M56 110 Q75 126 94 110"
+      fill="white"
+      stroke="#222"
+      stroke-width="3"
+    />
+    <path
+      d="M106 110 Q125 126 144 110"
+      fill="white"
+      stroke="#222"
+      stroke-width="3"
+    />
+
+    <circle cx="75" cy="114" r="6" fill="${eyeColor}"/>
+    <circle cx="125" cy="114" r="6" fill="${eyeColor}"/>
+  `;
+}
+
 
 if (mouth === "tongue") {
   mouthGraphic = `
@@ -458,7 +580,7 @@ if (mouth === "missing-tooth") {
       />
       <circle
         cx="170" cy="130" r="7"
-        fill="none"
+        fill="${accessoryMap.get("earrings")}"
         stroke="${accessoryMap.get("earrings")}"
         stroke-width="4"
       />
@@ -731,6 +853,9 @@ function startEditingAvatar(avatarId) {
 
   avatarChoices.mouth =
     avatar.mouth || "grinning";
+
+   avatarChoices.eyeStyle =
+  avatar.eyeStyle || "normal";
 
   avatarChoices.accessories =
     Array.isArray(avatar.accessories)
