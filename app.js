@@ -775,8 +775,6 @@ if (accessoryMap.has("clipboard")) {
   `;
 }
 
-  });
-
 
   return `
     <svg
@@ -954,6 +952,7 @@ document
       updateAccessoryColorStates();
       updateAvatarPreview();
     });
+});
 /* =========================================================
    AVATAR DISPLAY AND EDITING
 ========================================================= */
