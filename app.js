@@ -627,13 +627,14 @@ if (mouth === "missing-tooth") {
         stroke="#222"
         stroke-width="3"
       />
-
+      ${eyeGraphic}
       ${accessoryGraphic}
 
       <circle cx="75" cy="108" r="6" fill="${eyeColor}"/>
       <circle cx="125" cy="108" r="6" fill="${eyeColor}"/>
 
       ${mouthGraphic}
+      ${heldObjectGraphic}
     </svg>
   `;
 }
@@ -774,6 +775,181 @@ document
       updateAccessoryColorStates();
       updateAvatarPreview();
     });
+
+     let heldObjectGraphic = "";
+
+if (accessoryMap.has("beer")) {
+  heldObjectGraphic = `
+    <g transform="translate(143 148) rotate(-12)">
+      <!-- Beer glass -->
+      <path
+        d="M0 0 H27 L23 48
+           Q13 55 4 48 Z"
+        fill="#e8b923"
+        stroke="#222"
+        stroke-width="3"
+      />
+
+      <!-- Foam -->
+      <path
+        d="M0 2
+           Q4 -8 9 1
+           Q14 -9 19 1
+           Q24 -8 27 2
+           L27 10 H0 Z"
+        fill="#fff4cf"
+        stroke="#222"
+        stroke-width="2"
+      />
+
+      <!-- Glass rim -->
+      <path
+        d="M0 2 H27"
+        fill="none"
+        stroke="#222"
+        stroke-width="3"
+      />
+
+      <!-- Handle -->
+      <path
+        d="M24 12 Q42 10 38 27
+           Q35 36 24 32"
+        fill="none"
+        stroke="#222"
+        stroke-width="4"
+      />
+    </g>
+  `;
+}
+
+if (accessoryMap.has("sword")) {
+  heldObjectGraphic = `
+    <g transform="translate(148 142) rotate(28)">
+      <!-- Blade -->
+      <path
+        d="M11 0 L21 7 L13 76 L3 76 Z"
+        fill="#dbeafe"
+        stroke="#222"
+        stroke-width="3"
+      />
+
+      <!-- Blade shine -->
+      <path
+        d="M13 10 L16 15 L10 60"
+        fill="none"
+        stroke="white"
+        stroke-width="3"
+      />
+
+      <!-- Guard -->
+      <path
+        d="M-5 73 H26"
+        stroke="#9a6b24"
+        stroke-width="7"
+        stroke-linecap="round"
+      />
+
+      <!-- Handle -->
+      <path
+        d="M10 77 V103"
+        stroke="#5b3515"
+        stroke-width="7"
+      />
+
+      <!-- Pommel -->
+      <circle
+        cx="10"
+        cy="107"
+        r="7"
+        fill="#d4a72c"
+        stroke="#222"
+        stroke-width="2"
+      />
+    </g>
+  `;
+}
+
+if (accessoryMap.has("soccer-ball")) {
+  heldObjectGraphic = `
+    <g transform="translate(133 151)">
+      <circle
+        cx="24"
+        cy="24"
+        r="24"
+        fill="white"
+        stroke="#222"
+        stroke-width="3"
+      />
+
+      <path
+        d="M24 11 L34 18 L30 30 H18 L14 18 Z"
+        fill="#222"
+      />
+
+      <path
+        d="M14 18 L5 12
+           M34 18 L43 12
+           M18 30 L11 40
+           M30 30 L37 40
+           M24 11 V2"
+        fill="none"
+        stroke="#222"
+        stroke-width="3"
+      />
+    </g>
+  `;
+}
+
+if (accessoryMap.has("clipboard")) {
+  heldObjectGraphic = `
+    <g transform="translate(137 139) rotate(8)">
+      <!-- Clipboard -->
+      <rect
+        x="0"
+        y="8"
+        width="43"
+        height="62"
+        rx="3"
+        fill="#d59b54"
+        stroke="#222"
+        stroke-width="3"
+      />
+
+      <!-- Paper -->
+      <rect
+        x="5"
+        y="18"
+        width="33"
+        height="45"
+        fill="white"
+        stroke="#222"
+        stroke-width="2"
+      />
+
+      <!-- Clip -->
+      <rect
+        x="12"
+        y="0"
+        width="19"
+        height="15"
+        rx="4"
+        fill="#777"
+        stroke="#222"
+        stroke-width="2"
+      />
+
+      <!-- Writing -->
+      <path
+        d="M10 29 H33
+           M10 38 H33
+           M10 47 H27"
+        stroke="#2563eb"
+        stroke-width="2"
+      />
+    </g>
+  `;
+}
+
   });
 
 /* =========================================================
