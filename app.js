@@ -432,13 +432,13 @@ function createAvatarSVG(avatar = {}) {
   if (accessoryMap.has("earrings")) {
     accessoryGraphic += `
       <circle
-        cx="52" cy="152" r="7"
+        cx="32" cy="124" r="7"
         fill="none"
         stroke="${accessoryMap.get("earrings")}"
         stroke-width="4"
       />
       <circle
-        cx="143" cy="124" r="7"
+        cx="162" cy="124" r="7"
         fill="none"
         stroke="${accessoryMap.get("earrings")}"
         stroke-width="4"
