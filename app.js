@@ -207,46 +207,65 @@ function createAvatarSVG(avatar = {}) {
     `;
   }
 
-  if (mouth === "tongue") {
-    mouthGraphic = `
-      <path
-        d="M76 130 Q100 150 124 130
-           Q120 160 100 160
-           Q80 160 76 130 Z"
-        fill="#7d2635"
-        stroke="#222"
-        stroke-width="2"
-      />
-      <path
-        d="M88 148 Q100 140 112 148
-           Q110 160 100 162
-           Q90 160 88 148 Z"
-        fill="#f07886"
-        stroke="#222"
-        stroke-width="2"
-      />
-    `;
-  }
+if (mouth === "tongue") {
+  mouthGraphic = `
+    <!-- Large mouth -->
+    <path
+      d="M68 139 Q100 174 132 139
+         Q127 172 100 177
+         Q73 172 68 139 Z"
+      fill="#54202b"
+      stroke="#222"
+      stroke-width="3"
+    />
 
-  if (mouth === "missing-tooth") {
-    mouthGraphic = `
-      <path
-        d="M76 130 Q100 150 124 130
-           Q120 158 100 158
-           Q80 158 76 130 Z"
-        fill="#54202b"
-        stroke="#222"
-        stroke-width="2"
-      />
-      <path
-        d="M91 133 Q97 130 103 133
-           L102 145 Q97 148 92 144 Z"
-        fill="white"
-        stroke="#222"
-        stroke-width="1.5"
-      />
-    `;
-  }
+    <!-- Tongue -->
+    <path
+      d="M78 151
+         Q100 139 122 151
+         Q119 177 100 180
+         Q81 177 78 151 Z"
+      fill="#f07886"
+      stroke="#222"
+      stroke-width="2"
+    />
+
+    <!-- Tongue center line -->
+    <path
+      d="M100 151 Q100 164 100 176"
+      fill="none"
+      stroke="#b84f61"
+      stroke-width="2"
+      stroke-linecap="round"
+    />
+  `;
+}
+
+if (mouth === "missing-tooth") {
+  mouthGraphic = `
+    <!-- Large mouth -->
+    <path
+      d="M68 139 Q100 174 132 139
+         Q127 172 100 177
+         Q73 172 68 139 Z"
+      fill="#54202b"
+      stroke="#222"
+      stroke-width="3"
+    />
+
+    <!-- Missing tooth / remaining tooth -->
+    <path
+      d="M88 140
+         Q100 135 112 140
+         L110 157
+         Q100 163 90 157 Z"
+      fill="white"
+      stroke="#222"
+      stroke-width="2"
+    />
+  `;
+}
+
 
   if (mouth === "braces") {
     mouthGraphic = `
