@@ -263,10 +263,11 @@ if (mouth === "missing-tooth") {
 
 <!-- Tooth inside the mouth -->
 <path
-  d="M91 139
-     Q100 140 109 143
-     L108 157
-     Q100 161 92 157 Z"
+  d="M92 153
+     Q100 155 108 153
+     L107 164
+     Q100 169 93 164
+     Z"
   fill="#fff"
   stroke="#222"
   stroke-width="2"
