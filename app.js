@@ -214,7 +214,19 @@ function createAvatarSVG(avatar = {}) {
 if (mouth === "tongue") {
   mouthGraphic = `
 
-      <!-- Tongue -->
+
+
+    <!-- Large mouth -->
+    <path
+      d="M68 139 Q100 174 132 139
+         Q127 172 100 177
+         Q73 172 68 139 Z"
+      fill="#54202b"
+      stroke="#222"
+      stroke-width="3"
+    />
+
+          <!-- Tongue -->
     <path
       d="M78 151
          Q100 139 122 151
@@ -234,16 +246,6 @@ if (mouth === "tongue") {
       stroke-linecap="round"
     />
 
-    <!-- Large mouth -->
-    <path
-      d="M68 139 Q100 174 132 139
-         Q127 172 100 177
-         Q73 172 68 139 Z"
-      fill="#54202b"
-      stroke="#222"
-      stroke-width="3"
-    />
-
  `;
 }
 
@@ -261,7 +263,7 @@ if (mouth === "missing-tooth") {
 
 <!-- Tooth inside the mouth -->
 <path
-  d="M91 143
+  d="M91 139
      Q100 140 109 143
      L108 157
      Q100 161 92 157 Z"
