@@ -42,6 +42,10 @@ let avatars = loadData("avatars");
 let entries = loadData("entries");
 let pointsChart = null;
 
+let editingAvatarId = null;
+let editingEntryId = null;
+
+
 const competitionSelection = new Set(
   avatars.map(avatar => avatar.id)
 );
@@ -718,16 +722,198 @@ function displayAvatars() {
         ${calculateTotalPoints(avatar.id)} points
       </p>
 
-      <button
-        type="button"
-        class="delete-avatar-button"
-        data-delete-avatar="${escapeHTML(avatar.id)}"
-      >
-        Delete avatar
-      </button>
+<div class="avatar-actions">
+  <button
+    type="button"
+    class="edit-avatar-button"
+    data-edit-avatar="${escapeHTML(avatar.id)}"
+  >
+    Edit avatar
+  </button>
+
+  <button
+    type="button"
+    class="delete-avatar-button"
+    data-delete-avatar="${escapeHTML(avatar.id)}"
+  >
+    Delete avatar
+  </button>
+</div>
+
     </article>
   `).join("");
 }
+
+function startEditingAvatar(avatarId) {
+  const avatar = avatars.find(item => item.id === avatarId);
+
+  if (!avatar) {
+    return;
+  }
+
+  editingAvatarId = avatarId;
+
+  const nameInput = document.querySelector("#avatar-name");
+
+  if (nameInput) {
+    nameInput.value = avatar.name || "";
+  }
+
+  avatarChoices.ghostColor =
+    avatar.ghostColor || "#ff0000";
+
+  avatarChoices.eyeColor =
+    avatar.eyeColor || "#222222";
+
+  avatarChoices.mouth =
+    avatar.mouth || "grinning";
+
+  avatarChoices.accessories = Array.isArray(
+    avatar.accessories
+  )
+    ? avatar.accessories.map(accessory => ({
+        ...accessory
+      }))
+    : [];
+
+  document
+    .querySelectorAll("[data-option]")
+    .forEach(button => {
+      const option = button.dataset.option;
+      const value = button.dataset.value;
+
+      button.classList.toggle(
+        "selected",
+        avatarChoices[option] === value
+      );
+    });
+
+  updateAccessoryButtonStates();
+
+  selectedAccessoryType =
+    avatarChoices.accessories[0]?.type || null;
+
+  updateAccessoryColorStates();
+  updateAvatarPreview();
+
+  const submitButton = avatarForm?.querySelector(
+    'button[type="submit"]'
+  );
+
+  addAvatarCancelButton();
+  if (submitButton) {
+    submitButton.textContent = "Save avatar changes";
+  }
+
+  avatarForm?.scrollIntoView({
+    behavior: "smooth",
+    block: "start"
+  });
+}
+
+
+function cancelEditingAvatar() {
+  editingAvatarId = null;
+
+if (avatarForm) {
+  avatarForm.addEventListener("submit", event => {
+    event.preventDefault();
+
+    const nameInput = document.querySelector(
+      "#avatar-name"
+    );
+
+    const name = nameInput?.value.trim();
+
+    if (!name) {
+      alert("Enter an avatar name.");
+      return;
+    }
+
+    if (editingAvatarId) {
+      const avatar = avatars.find(
+        item => item.id === editingAvatarId
+      );
+
+      if (avatar) {
+        avatar.name = name;
+        avatar.ghostColor = avatarChoices.ghostColor;
+        avatar.eyeColor = avatarChoices.eyeColor;
+        avatar.mouth = avatarChoices.mouth;
+        avatar.accessories =
+          avatarChoices.accessories.map(accessory => ({
+            ...accessory
+          }));
+      }
+
+      alert("Avatar updated.");
+    } else {
+      const avatar = {
+        id: createId(),
+        name,
+        ghostColor: avatarChoices.ghostColor,
+        eyeColor: avatarChoices.eyeColor,
+        mouth: avatarChoices.mouth,
+        accessories:
+          avatarChoices.accessories.map(accessory => ({
+            ...accessory
+          }))
+      };
+
+      avatars.push(avatar);
+      competitionSelection.add(avatar.id);
+
+      alert("Avatar created.");
+    }
+
+    saveData();
+    cancelEditingAvatar();
+    refreshPage();
+  });
+}
+
+
+  updateAccessoryButtonStates();
+  updateAccessoryColorStates();
+  updateAvatarPreview();
+
+  const submitButton = avatarForm?.querySelector(
+    'button[type="submit"]'
+  );
+
+  if (submitButton) {
+    submitButton.textContent = "Create avatar";
+  }
+
+  document
+    .querySelector("#cancel-avatar-edit")
+    ?.remove();
+}
+
+function addAvatarCancelButton() {
+  if (!avatarForm || editingAvatarId === null) {
+    return;
+  }
+
+  if (document.querySelector("#cancel-avatar-edit")) {
+    return;
+  }
+
+  const cancelButton = document.createElement("button");
+
+  cancelButton.type = "button";
+  cancelButton.id = "cancel-avatar-edit";
+  cancelButton.className = "cancel-button";
+  cancelButton.textContent = "Cancel avatar editing";
+
+  cancelButton.addEventListener(
+    "click",
+    cancelEditingAvatar
+  );
+
+  avatarForm.appendChild(cancelButton);
+}
+
 
 function displayComparisonOptions() {
   if (!avatarOneSelect || !avatarTwoSelect) {
@@ -832,10 +1018,24 @@ if (entryForm) {
   entryForm.addEventListener("submit", event => {
     event.preventDefault();
 
-    if (avatars.length === 0) {
-      alert("Create at least one avatar first.");
+    if (avatars.length < 2) {
+      alert(
+        "You need at least two avatars for a competition."
+      );
       return;
     }
+
+    const typeInput = document.querySelector(
+      "#competition-type"
+    );
+
+    const dateInput = document.querySelector(
+      "#competition-date"
+    );
+
+    const notesInput = document.querySelector(
+      "#competition-notes"
+    );
 
     const results = [
       ...document.querySelectorAll(".avatar-points")
@@ -854,6 +1054,36 @@ if (entryForm) {
       );
       return;
     }
+
+    const updatedEntry = {
+      id: editingEntryId || createId(),
+      type: typeInput?.value.trim() || "Competition",
+      date: dateInput?.value || "",
+      notes: notesInput?.value.trim() || "",
+      results
+    };
+
+    if (editingEntryId) {
+      const index = entries.findIndex(
+        entry => entry.id === editingEntryId
+      );
+
+      if (index !== -1) {
+        entries[index] = updatedEntry;
+      }
+
+      alert("Competition updated.");
+    } else {
+      entries.push(updatedEntry);
+      alert("Competition created.");
+    }
+
+    saveData();
+    cancelEditingEntry();
+    refreshPage();
+  });
+}
+
 
     const typeInput = document.querySelector(
       "#competition-type"
@@ -1078,13 +1308,24 @@ function displayEntries() {
               : ""
           }
 
-          <button
-            type="button"
-            class="delete-entry-button"
-            data-delete-entry="${escapeHTML(entry.id)}"
-          >
-            Delete competition
-          </button>
+         <div class="entry-actions">
+           <button
+             type="button"
+             class="edit-entry-button"
+             data-edit-entry="${escapeHTML(entry.id)}"
+           >
+             Edit competition
+           </button>
+         
+           <button
+             type="button"
+             class="delete-entry-button"
+             data-delete-entry="${escapeHTML(entry.id)}"
+           >
+             Delete competition
+           </button>
+         </div>
+
         </div>
       </details>
     `;
@@ -1336,28 +1577,191 @@ function deleteEntry(entryId) {
   refreshPage();
 }
 
-document.addEventListener("click", event => {
-  const avatarButton = event.target.closest(
-    "[data-delete-avatar]"
+function startEditingEntry(entryId) {
+  const entry = entries.find(item => item.id === entryId);
+
+  if (!entry) {
+    return;
+  }
+
+  editingEntryId = entryId;
+
+  const typeInput = document.querySelector(
+    "#competition-type"
   );
 
-  if (avatarButton) {
-    deleteAvatar(
-      avatarButton.dataset.deleteAvatar
+  const dateInput = document.querySelector(
+    "#competition-date"
+  );
+
+  const notesInput = document.querySelector(
+    "#competition-notes"
+  );
+
+  if (typeInput) {
+    typeInput.value = entry.type || "";
+  }
+
+  if (dateInput) {
+    dateInput.value = entry.date || "";
+  }
+
+  if (notesInput) {
+    notesInput.value = entry.notes || "";
+  }
+
+  const resultMap = new Map(
+    (entry.results || []).map(result => [
+      result.avatarId,
+      result.points
+    ])
+  );
+
+  competitionSelection.clear();
+
+  avatars.forEach(avatar => {
+    const checkbox = document.querySelector(
+      `[data-competition-avatar="${avatar.id}"]`
+    );
+
+    const pointsInput = document.querySelector(
+      `.avatar-points[data-avatar-id="${avatar.id}"]`
+    );
+
+    const hasResult = resultMap.has(avatar.id);
+
+    if (hasResult) {
+      competitionSelection.add(avatar.id);
+    }
+
+    if (checkbox) {
+      checkbox.checked = hasResult;
+    }
+
+    if (pointsInput) {
+      pointsInput.disabled = !hasResult;
+      pointsInput.value = hasResult
+        ? resultMap.get(avatar.id)
+        : 0;
+    }
+  });
+
+  const submitButton = entryForm?.querySelector(
+    'button[type="submit"]'
+  );
+
+  if (submitButton) {
+    submitButton.textContent =
+      "Save competition changes";
+  }
+
+  addEntryCancelButton();
+
+  entryForm?.scrollIntoView({
+    behavior: "smooth",
+    block: "start"
+  });
+}
+
+function cancelEditingEntry() {
+  editingEntryId = null;
+
+  if (entryForm) {
+    entryForm.reset();
+  }
+
+  competitionSelection.clear();
+
+  avatars.forEach(avatar => {
+    competitionSelection.add(avatar.id);
+  });
+
+  const submitButton = entryForm?.querySelector(
+    'button[type="submit"]'
+  );
+
+  if (submitButton) {
+    submitButton.textContent = "Save competition";
+  }
+
+  document
+    .querySelector("#cancel-entry-edit")
+    ?.remove();
+
+  displayPointsFields();
+}
+
+function addEntryCancelButton() {
+  if (!entryForm || editingEntryId === null) {
+    return;
+  }
+
+  if (document.querySelector("#cancel-entry-edit")) {
+    return;
+  }
+
+  const cancelButton = document.createElement("button");
+
+  cancelButton.type = "button";
+  cancelButton.id = "cancel-entry-edit";
+  cancelButton.className = "cancel-button";
+  cancelButton.textContent =
+    "Cancel competition editing";
+
+  cancelButton.addEventListener(
+    "click",
+    cancelEditingEntry
+  );
+
+  entryForm.appendChild(cancelButton);
+}
+
+
+document.addEventListener("click", event => {
+  const editAvatarButton = event.target.closest(
+    "[data-edit-avatar]"
+  );
+
+  if (editAvatarButton) {
+    startEditingAvatar(
+      editAvatarButton.dataset.editAvatar
     );
     return;
   }
 
-  const entryButton = event.target.closest(
+  const deleteAvatarButton = event.target.closest(
+    "[data-delete-avatar]"
+  );
+
+  if (deleteAvatarButton) {
+    deleteAvatar(
+      deleteAvatarButton.dataset.deleteAvatar
+    );
+    return;
+  }
+
+  const editEntryButton = event.target.closest(
+    "[data-edit-entry]"
+  );
+
+  if (editEntryButton) {
+    startEditingEntry(
+      editEntryButton.dataset.editEntry
+    );
+    return;
+  }
+
+  const deleteEntryButton = event.target.closest(
     "[data-delete-entry]"
   );
 
-  if (entryButton) {
+  if (deleteEntryButton) {
     deleteEntry(
-      entryButton.dataset.deleteEntry
+      deleteEntryButton.dataset.deleteEntry
     );
   }
 });
+
 
 /* -----------------------------
    Chart
