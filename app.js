@@ -1104,6 +1104,8 @@ function cancelEditingAvatar() {
   avatarChoices.eyeColor = "#222222";
   avatarChoices.mouth = "grinning";
   avatarChoices.accessories = [];
+  avatarChoices.eyeStyle = "normal";
+
 
   selectedAccessoryType = null;
 
@@ -1166,15 +1168,15 @@ if (avatarForm) {
       }
 
       avatar.name = name;
-      avatar.ghostColor =
-        avatarChoices.ghostColor;
-      avatar.eyeColor =
-        avatarChoices.eyeColor;
+      avatar.ghostColor = avatarChoices.ghostColor;
+      avatar.eyeColor = avatarChoices.eyeColor;
+      avatar.eyeStyle = avatarChoices.eyeStyle;
       avatar.mouth = avatarChoices.mouth;
       avatar.accessories =
         avatarChoices.accessories.map(item => ({
           ...item
         }));
+
 
       alert("Avatar updated.");
     } else {
@@ -1183,6 +1185,7 @@ if (avatarForm) {
         name,
         ghostColor: avatarChoices.ghostColor,
         eyeColor: avatarChoices.eyeColor,
+         eyeStyle: avatarChoices.eyeStyle,
         mouth: avatarChoices.mouth,
         accessories:
           avatarChoices.accessories.map(item => ({
@@ -1699,7 +1702,7 @@ clearCompetitionFilters?.addEventListener(
   () => {
     [...competitionAvatarFilter.options]
       .forEach(option => {
-        option.selected = false;
+        option.selected = option.value === "all";
       });
 
     [...competitionTypeFilter.options]
@@ -1708,9 +1711,12 @@ clearCompetitionFilters?.addEventListener(
       });
 
     competitionsAreVisible = false;
+
     displayEntries();
+    updateChart();
   }
 );
+
 
 /* =========================================================
    DELETE BUTTONS AND EVENT DELEGATION
@@ -1950,120 +1956,47 @@ function updateChart() {
     }
   );
 }
-
-
-  // During a comparison, keep only competitions where
-  // both selected avatars participated.
-  if (
-    sharedCompetitionsOnly &&
-    selectedAvatarIds?.length === 2
-  ) {
-    const [firstId, secondId] = selectedAvatarIds;
-
-    chartEntries = chartEntries.filter(entry => {
-      const results = Array.isArray(entry.results)
-        ? entry.results
-        : [];
-
-      const participatedIds = new Set(
-        results.map(result => result.avatarId)
-      );
-
-      return (
-        participatedIds.has(firstId) &&
-        participatedIds.has(secondId)
-      );
-    });
+function refreshCompetitionResults() {
+  if (!competitionsAreVisible) {
+    return;
   }
 
-  const labels = [
-    ...new Set(
-      chartEntries.map(entry => entry.date)
-    )
-  ];
-
-  const avatarsToDisplay = avatars.filter(avatar => {
-    return (
-      !selectedIds ||
-      selectedIds.has(avatar.id)
-    );
-  });
-
-  const datasets = avatarsToDisplay.map((avatar, index) => {
-    let runningTotal = 0;
-
-    const data = labels.map(date => {
-      chartEntries
-        .filter(entry => entry.date === date)
-        .forEach(entry => {
-          const results = Array.isArray(entry.results)
-            ? entry.results
-            : [];
-
-          const result = results.find(
-            item => item.avatarId === avatar.id
-          );
-
-          if (result) {
-            runningTotal += Number(
-              result.points || 0
-            );
-          }
-        });
-
-      return runningTotal;
-    });
-
-    return {
-      label: avatar.name,
-      data,
-      borderColor: getChartColor(index),
-      backgroundColor: getChartColor(index),
-      tension: 0.2,
-      fill: false
-    };
-  });
-
-  if (pointsChart) {
-    pointsChart.destroy();
-  }
-
-  pointsChart = new Chart(
-    chartCanvas.getContext("2d"),
-    {
-      type: "line",
-      data: {
-        labels,
-        datasets
-      },
-      options: {
-        responsive: true,
-        maintainAspectRatio: false,
-        scales: {
-          y: {
-            beginAtZero: true,
-            title: {
-              display: true,
-              text: "Cumulative points"
-            }
-          },
-          x: {
-            title: {
-              display: true,
-              text: "Shared competition date"
-            }
-          }
-        },
-        plugins: {
-          legend: {
-            display: true
-          }
-        }
-      }
-    }
-  );
+  displayEntries();
+  updateChart();
 }
 
+competitionAvatarFilter?.addEventListener(
+  "change",
+  event => {
+    const select = event.currentTarget;
+    const selectedValues = [
+      ...select.selectedOptions
+    ].map(option => option.value);
+
+    const allOption = [...select.options].find(
+      option => option.value === "all"
+    );
+
+    if (
+      allOption &&
+      selectedValues.includes("all")
+    ) {
+      [...select.options].forEach(option => {
+        option.selected = option === allOption;
+      });
+    }
+
+    refreshCompetitionResults();
+  }
+);
+
+competitionTypeFilter?.addEventListener(
+  "change",
+  refreshCompetitionResults
+);
+
+
+  
 function getSelectedCompetitionFilters() {
   if (
     !competitionAvatarFilter ||
@@ -2125,9 +2058,11 @@ function getFilteredCompetitionEntries() {
 
       const matchesAvatar =
         !hasAvatarFilter ||
-        results.some(result =>
-          selectedAvatarIds.has(result.avatarId)
-        );
+        [...selectedAvatarIds].every(avatarId =>
+          results.some(result =>
+            result.avatarId === avatarId
+          )
+        );   
 
       const matchesType =
         !hasTypeFilter ||
