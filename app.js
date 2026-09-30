@@ -802,10 +802,6 @@ if (accessoryMap.has("clipboard")) {
       />
       ${eyeGraphic}
       ${accessoryGraphic}
-
-      <circle cx="75" cy="108" r="6" fill="${eyeColor}"/>
-      <circle cx="125" cy="108" r="6" fill="${eyeColor}"/>
-
       ${mouthGraphic}
     </svg>
   `;
