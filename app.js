@@ -340,8 +340,23 @@ if (eyeStyle === "big-irises") {
       stroke-width="3"
     />
 
-    <circle cx="78" cy="106" r="3" fill="black"/>
-    <circle cx="128" cy="106" r="3" fill="black"/>
+    <circle cx="78" cy="106" r="3" fill="white"/>
+    <circle cx="128" cy="106" r="3" fill="white"/>
+
+   <ellipse
+      cx="75"
+      cy="105"
+      rx="8"
+      ry="10"
+      fill="${eyeColor}"
+    />
+    <ellipse
+      cx="125"
+      cy="105"
+      rx="8"
+      ry="10"
+      fill="${eyeColor}"
+    />
   `;
 }
 
