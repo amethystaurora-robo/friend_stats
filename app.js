@@ -1533,26 +1533,213 @@ function cancelEditingEntry() {
 ========================================================= */
 
 function displayCompetitionFilters() {
-  if (!competitionAvatarFilter) return;
+  if (competitionAvatarFilter) {
+    const selectedIds = new Set(getSelectedAvatarIds());
 
-  const previouslySelected = new Set(
-    [...competitionAvatarFilter.selectedOptions].map(
-      option => option.value
-    )
-  );
+    competitionAvatarFilter.innerHTML = avatars
+      .map(avatar => `
+        <option value="${escapeHTML(avatar.id)}">
+          ${escapeHTML(avatar.name)}
+        </option>
+      `)
+      .join("");
 
-  competitionAvatarFilter.innerHTML = avatars
-    .map(avatar => `
-      <option value="${escapeHTML(avatar.id)}">
-        ${escapeHTML(avatar.name)}
-      </option>
-    `)
-    .join("");
+    [...competitionAvatarFilter.options].forEach(option => {
+      option.selected = selectedIds.has(option.value);
+    });
+  }
 
-  [...competitionAvatarFilter.options].forEach(option => {
-    option.selected = previouslySelected.has(option.value);
+  if (competitionTypeFilter) {
+    const selectedTypes = new Set(
+      [...competitionTypeFilter.selectedOptions].map(option => option.value)
+    );
+
+    const types = [...new Set(
+      entries.map(entry => entry.type || "Competition")
+    )].sort();
+
+    competitionTypeFilter.innerHTML = types
+      .map(type => `
+        <option value="${escapeHTML(type)}">${escapeHTML(type)}</option>
+      `)
+      .join("");
+
+    [...competitionTypeFilter.options].forEach(option => {
+      option.selected = selectedTypes.has(option.value);
+    });
+  }
+}
+
+function getSelectedAvatarIds() {
+  return competitionAvatarFilter
+    ? [...competitionAvatarFilter.selectedOptions].map(option => option.value)
+    : [];
+}
+
+function getSelectedCompetitionTypes() {
+  return competitionTypeFilter
+    ? [...competitionTypeFilter.selectedOptions].map(option => option.value)
+    : [];
+}
+
+function getFilteredComparisonEntries(avatarIds, types) {
+  return entries
+    .filter(entry => {
+      const results = Array.isArray(entry.results) ? entry.results : [];
+      const type = entry.type || "Competition";
+
+      const typeMatches = types.length === 0 || types.includes(type);
+      const avatarsMatch =
+        avatarIds.length === 0 ||
+        avatarIds.every(id => results.some(result => result.avatarId === id));
+
+      return typeMatches && avatarsMatch;
+    })
+    .sort((a, b) =>
+      new Date(a.date || 0) - new Date(b.date || 0) ||
+      String(a.id).localeCompare(String(b.id))
+    );
+}
+
+function displayComparisonEntries(filteredEntries, avatarIds) {
+  if (!entryList) return;
+
+  if (filteredEntries.length === 0) {
+    entryList.innerHTML = "<p>No competitions match those filters.</p>";
+    return;
+  }
+
+  entryList.innerHTML = filteredEntries.map(entry => {
+    const results = Array.isArray(entry.results) ? entry.results : [];
+    const visibleResults = avatarIds.length
+      ? results.filter(result => avatarIds.includes(result.avatarId))
+      : results;
+
+    const resultItems = visibleResults.map(result => `
+      <li>
+        ${escapeHTML(getAvatarName(result.avatarId))}:
+        <strong>${Number(result.points || 0)} points</strong>
+      </li>
+    `).join("");
+
+    return `
+      <details class="entry" id="competition-${escapeHTML(entry.id)}"
+        data-entry-id="${escapeHTML(entry.id)}">
+        <summary>
+          <span class="entry-title">${escapeHTML(entry.type || "Competition")}</span>
+          <span class="entry-summary">
+            ${escapeHTML(entry.date || "No date")} · ${visibleResults.length} participant(s)
+          </span>
+        </summary>
+        <div class="entry-content">
+          <ul>${resultItems || "<li>No matching participants.</li>"}</ul>
+          ${entry.notes ? `<p><strong>Notes:</strong> ${escapeHTML(entry.notes)}</p>` : ""}
+          <div class="entry-actions">
+            <button type="button" data-edit-entry="${escapeHTML(entry.id)}">Edit competition</button>
+            <button type="button" data-delete-entry="${escapeHTML(entry.id)}">Delete competition</button>
+          </div>
+        </div>
+      </details>
+    `;
+  }).join("");
+}
+
+function updateComparisonChart(filteredEntries, avatarIds) {
+  if (!chartCanvas || typeof Chart === "undefined") return;
+
+  if (pointsChart) {
+    pointsChart.destroy();
+    pointsChart = null;
+  }
+
+  // A chart compares avatars, so don’t draw one when no avatars were selected.
+  if (avatarIds.length === 0 || filteredEntries.length === 0) return;
+
+  const datasets = avatarIds.map((avatarId, index) => {
+    let runningTotal = 0;
+
+    return {
+      label: getAvatarName(avatarId),
+      data: filteredEntries.map(entry => {
+        const result = (entry.results || []).find(
+          item => item.avatarId === avatarId
+        );
+        runningTotal += Number(result?.points || 0);
+        return runningTotal;
+      }),
+      borderColor: getChartColor(index),
+      backgroundColor: getChartColor(index),
+      tension: 0.2,
+      fill: false
+    };
+  });
+
+  pointsChart = new Chart(chartCanvas.getContext("2d"), {
+    type: "line",
+    data: {
+      labels: filteredEntries.map(entry =>
+        entry.date
+          ? `${entry.date} · ${entry.type || "Competition"}`
+          : (entry.type || "Competition")
+      ),
+      datasets
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      interaction: { mode: "nearest", intersect: true },
+      onClick(event, activeElements) {
+        if (!activeElements.length) return;
+
+        const entry = filteredEntries[activeElements[0].index];
+        const details = document.querySelector(
+          `#competition-${CSS.escape(entry.id)}`
+        );
+
+        if (details) {
+          details.open = true;
+          details.scrollIntoView({ behavior: "smooth", block: "center" });
+        }
+      },
+      scales: {
+        y: { beginAtZero: true, title: { display: true, text: "Cumulative points" } },
+        x: { title: { display: true, text: "Competition" } }
+      },
+      plugins: {
+        tooltip: {
+          callbacks: {
+            title(items) {
+              const entry = filteredEntries[items[0].dataIndex];
+              return entry.date
+                ? `${entry.type || "Competition"} · ${entry.date}`
+                : (entry.type || "Competition");
+            }
+          }
+        }
+      }
+    }
   });
 }
+
+function submitComparison() {
+  const avatarIds = getSelectedAvatarIds();
+  const types = getSelectedCompetitionTypes();
+  const filteredEntries = getFilteredComparisonEntries(avatarIds, types);
+
+  if (comparisonMessage) {
+    comparisonMessage.textContent =
+      `${filteredEntries.length} matching competition(s).` +
+      (avatarIds.length === 0
+        ? " Showing all participants in those competitions."
+        : "");
+  }
+
+  displayComparisonEntries(filteredEntries, avatarIds);
+  updateComparisonChart(filteredEntries, avatarIds);
+}
+
+displayCompetitionsButton?.addEventListener("click", submitComparison);
+
 
 function getSelectedAvatarIds() {
   if (!competitionAvatarFilter) return [];
