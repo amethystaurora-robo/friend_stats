@@ -2094,262 +2094,42 @@ function getSelectedCompetitionFilters() {
 /* =========================================================
    REFRESH AND INITIALISATION
 ========================================================= */
+function refreshPage() {
+  displayAvatars();
+  displayPointsFields();
+  displayCompetitionFilters();
 
-/* =========================================================
-   COMPARISON: SHARED COMPETITIONS, CHART, AND DETAILS
-========================================================= */
-
-function displayCompetitionFilters() {
-  if (!competitionAvatarFilter) return;
-
-  const previouslySelected = new Set(
-    [...competitionAvatarFilter.selectedOptions].map(
-      option => option.value
+  // Remove deleted avatars from the current comparison.
+  selectedComparisonAvatarIds = new Set(
+    [...selectedComparisonAvatarIds].filter(id =>
+      avatars.some(avatar => avatar.id === id)
     )
   );
 
-  competitionAvatarFilter.innerHTML = avatars
-    .map(avatar => `
-      <option value="${escapeHTML(avatar.id)}">
-        ${escapeHTML(avatar.name)}
-      </option>
-    `)
-    .join("");
-
-  [...competitionAvatarFilter.options].forEach(option => {
-    option.selected = previouslySelected.has(option.value);
-  });
-}
-
-function getSelectedAvatarIds() {
-  if (!competitionAvatarFilter) return [];
-
-  return [...competitionAvatarFilter.selectedOptions]
-    .map(option => option.value);
-}
-
-function getSharedCompetitionEntries(avatarIds) {
-  if (avatarIds.length === 0) return [];
-
-  return entries
-    .filter(entry => {
-      const results = Array.isArray(entry.results)
-        ? entry.results
-        : [];
-
-      // A competition is included only if every selected avatar
-      // has a result recorded for it.
-      return avatarIds.every(avatarId =>
-        results.some(result => result.avatarId === avatarId)
-      );
-    })
-    .sort((a, b) => {
-      const dateDifference =
-        new Date(a.date || 0) - new Date(b.date || 0);
-
-      return dateDifference || String(a.id).localeCompare(String(b.id));
+  // Keep the selector in sync with the current comparison.
+  if (competitionAvatarFilter) {
+    [...competitionAvatarFilter.options].forEach(option => {
+      option.selected = selectedComparisonAvatarIds.has(option.value);
     });
-}
-
-function displayComparisonEntries(sharedEntries) {
-  if (!entryList) return;
-
-  if (selectedComparisonAvatarIds.size === 0) {
-    entryList.innerHTML =
-      "<p>Select one or more avatars, then submit to compare them.</p>";
-    return;
   }
 
-  if (sharedEntries.length === 0) {
-    entryList.innerHTML =
-      "<p>No competitions include every selected avatar.</p>";
-    return;
-  }
-
-  entryList.innerHTML = sharedEntries.map((entry, index) => {
-    const results = Array.isArray(entry.results)
-      ? entry.results
-      : [];
-
-    const selectedResults = [...selectedComparisonAvatarIds]
-      .map(avatarId => {
-        const result = results.find(
-          item => item.avatarId === avatarId
-        );
-
-        return result
-          ? `<li>${escapeHTML(getAvatarName(avatarId))}: <strong>${Number(result.points || 0)} points</strong></li>`
-          : "";
-      })
-      .join("");
-
-    return `
-      <details
-        class="entry"
-        id="competition-${escapeHTML(entry.id)}"
-        data-entry-id="${escapeHTML(entry.id)}"
-      >
-        <summary>
-          <span class="entry-title">
-            ${escapeHTML(entry.type || "Competition")}
-          </span>
-          <span class="entry-summary">
-            ${escapeHTML(entry.date || "No date")}
-          </span>
-        </summary>
-
-        <div class="entry-content">
-          <ul>${selectedResults}</ul>
-          ${
-            entry.notes
-              ? `<p><strong>Notes:</strong> ${escapeHTML(entry.notes)}</p>`
-              : ""
-          }
-        </div>
-      </details>
-    `;
-  }).join("");
-}
-
-function updateComparisonChart(sharedEntries) {
-  if (!chartCanvas || typeof Chart === "undefined") return;
-
-  if (pointsChart) {
-    pointsChart.destroy();
-    pointsChart = null;
-  }
-
-  if (
-    selectedComparisonAvatarIds.size === 0 ||
-    sharedEntries.length === 0
-  ) {
-    return;
-  }
-
-  const avatarIds = [...selectedComparisonAvatarIds];
-
-  const datasets = avatarIds.map((avatarId, index) => {
-    let runningTotal = 0;
-
-    const data = sharedEntries.map(entry => {
-      const result = (entry.results || []).find(
-        item => item.avatarId === avatarId
-      );
-
-      runningTotal += Number(result?.points || 0);
-      return runningTotal;
-    });
-
-    return {
-      label: getAvatarName(avatarId),
-      data,
-      borderColor: getChartColor(index),
-      backgroundColor: getChartColor(index),
-      tension: 0.2,
-      fill: false
-    };
-  });
-
-  pointsChart = new Chart(chartCanvas.getContext("2d"), {
-    type: "line",
-    data: {
-      // Use short labels on the axis; tooltip shows the full competition name.
-      labels: sharedEntries.map((entry, index) =>
-        entry.date
-          ? `${entry.date} · ${entry.type || "Competition"}`
-          : `${index + 1}. ${entry.type || "Competition"}`
-      ),
-      datasets
-    },
-    options: {
-      responsive: true,
-      maintainAspectRatio: false,
-      interaction: {
-        mode: "nearest",
-        intersect: true
-      },
-      onClick(event, activeElements) {
-        if (!activeElements.length) return;
-
-        const competitionIndex = activeElements[0].index;
-        const entry = sharedEntries[competitionIndex];
-        const details = document.querySelector(
-          `#competition-${CSS.escape(entry.id)}`
-        );
-
-        if (!details) return;
-
-        details.open = true;
-        details.scrollIntoView({
-          behavior: "smooth",
-          block: "center"
-        });
-      },
-      scales: {
-        y: {
-          beginAtZero: true,
-          title: {
-            display: true,
-            text: "Cumulative points"
-          }
-        },
-        x: {
-          title: {
-            display: true,
-            text: "Competition"
-          }
-        }
-      },
-      plugins: {
-        tooltip: {
-          callbacks: {
-            title(items) {
-              const entry = sharedEntries[items[0].dataIndex];
-              const name = entry.type || "Competition";
-              return entry.date ? `${name} · ${entry.date}` : name;
-            }
-          }
-        },
-        legend: {
-          display: true
-        }
-      }
+  if (selectedComparisonAvatarIds.size > 0) {
+    const sharedEntries = getSharedCompetitionEntries(
+      [...selectedComparisonAvatarIds]
+    );
+    displayComparisonEntries(sharedEntries);
+    updateComparisonChart(sharedEntries);
+  } else {
+    if (entryList) {
+      entryList.innerHTML =
+        "<p>Select one or more avatars, then submit to compare them.</p>";
     }
-  });
-}
-
-function submitComparison() {
-  selectedComparisonAvatarIds = new Set(getSelectedAvatarIds());
-
-  if (selectedComparisonAvatarIds.size === 0) {
-    if (comparisonMessage) {
-      comparisonMessage.textContent =
-        "Select at least one avatar to compare.";
+    if (pointsChart) {
+      pointsChart.destroy();
+      pointsChart = null;
     }
-
-    displayComparisonEntries([]);
-    updateComparisonChart([]);
-    return;
   }
-
-  const sharedEntries = getSharedCompetitionEntries(
-    [...selectedComparisonAvatarIds]
-  );
-
-  if (comparisonMessage) {
-    comparisonMessage.textContent =
-      `${sharedEntries.length} competition${sharedEntries.length === 1 ? "" : "s"} include every selected avatar.`;
-  }
-
-  displayComparisonEntries(sharedEntries);
-  updateComparisonChart(sharedEntries);
 }
-
-displayCompetitionsButton?.addEventListener(
-  "click",
-  submitComparison
-);
-
 
 updateAccessoryButtonStates();
 updateAccessoryColorStates();
