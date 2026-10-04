@@ -10,6 +10,7 @@ const entryForm = document.querySelector("#entry-form");
 const pointsFields = document.querySelector("#points-fields");
 const entryList = document.querySelector("#entry-list");
 const avatarPreview = document.querySelector("#avatar-preview");
+const comparisonMessage = document.querySelector("#comparison-message");
 
 const competitionAvatarFilter = document.querySelector(
   "#competition-avatar-filter"
@@ -40,6 +41,8 @@ let pointsChart = null;
 let editingAvatarId = null;
 let editingEntryId = null;
 let competitionsAreVisible = false;
+let selectedComparisonAvatarIds = new Set();
+
 
 const competitionSelection = new Set(
   avatars.map(avatar => avatar.id)
@@ -1804,13 +1807,6 @@ displayCompetitionsButton?.addEventListener(
     return;
   }
 
-const comparisonMessage = document.querySelector("#comparison-message");
-
-let selectedComparisonAvatarIds = new Set();
-
-  const filteredEntries =
-    getFilteredCompetitionEntries();
-
   if (filteredEntries.length === 0) {
     entryList.innerHTML =
       "<p>No competitions match the selected filters.</p>";
@@ -2080,10 +2076,6 @@ function updateChart() {
   const hasTypeFilter =
     selectedTypes.size > 0;
 
-  const filteredEntries =
-    getFilteredCompetitionEntries()
-      .filter(entry => entry.date);
-
   const chartEntries = filteredEntries.sort((a, b) => {
     return new Date(a.date) - new Date(b.date);
   });
@@ -2176,46 +2168,6 @@ function updateChart() {
     }
   );
 }
-function refreshCompetitionResults() {
-  if (!competitionsAreVisible) {
-    return;
-  }
-
-  displayEntries();
-  updateChart();
-}
-
-competitionAvatarFilter?.addEventListener(
-  "change",
-  event => {
-    const select = event.currentTarget;
-    const selectedValues = [
-      ...select.selectedOptions
-    ].map(option => option.value);
-
-    const allOption = [...select.options].find(
-      option => option.value === "all"
-    );
-
-    if (
-      allOption &&
-      selectedValues.includes("all")
-    ) {
-      [...select.options].forEach(option => {
-        option.selected = option === allOption;
-      });
-    }
-
-    refreshCompetitionResults();
-  }
-);
-
-competitionTypeFilter?.addEventListener(
-  "change",
-  refreshCompetitionResults
-);
-
-
   
 function getSelectedCompetitionFilters() {
   if (
@@ -2255,49 +2207,6 @@ function getSelectedCompetitionFilters() {
     allAvatarsSelected
   };
 }
-
-function getFilteredCompetitionEntries() {
-  const {
-    selectedAvatarIds,
-    selectedTypes,
-    allAvatarsSelected
-  } = getSelectedCompetitionFilters();
-
-  const hasAvatarFilter =
-    !allAvatarsSelected &&
-    selectedAvatarIds.size > 0;
-
-  const hasTypeFilter =
-    selectedTypes.size > 0;
-
-  return entries
-    .filter(entry => {
-      const results = Array.isArray(entry.results)
-        ? entry.results
-        : [];
-
-      const matchesAvatar =
-        !hasAvatarFilter ||
-        [...selectedAvatarIds].every(avatarId =>
-          results.some(result =>
-            result.avatarId === avatarId
-          )
-        );   
-
-      const matchesType =
-        !hasTypeFilter ||
-        selectedTypes.has(
-          String(entry.type || "").trim()
-        );
-
-      return matchesAvatar && matchesType;
-    })
-    .sort((a, b) => {
-      return new Date(a.date) - new Date(b.date);
-    });
-}
-
-
 
 /* =========================================================
    REFRESH AND INITIALISATION
