@@ -543,72 +543,29 @@
       </form>
     </section>
 
-    <section class="panel">
-      <h2>Compare avatars</h2>
+   <section id="competition-results">
+  <h2>Compare avatars</h2>
 
-    <div class="comparison-controls">
-      <label for="avatar-one">First avatar</label>
-      <select id="avatar-one"></select>
-    
-      <label for="avatar-two">Second avatar</label>
-      <select id="avatar-two"></select>
-    
-      <button id="compare-button" type="button">
-        Compare
-      </button>
-    </div>
-
-
-      <div id="comparison-result"></div>
-    </section>
-
-    <section class="panel">
-      <h2>Points over time</h2>
-      <canvas id="points-chart"></canvas>
-    </section>
-
-    <section class="panel">
-      <h2>Competition history</h2>
-<div class="competition-filters">
-    <label for="competition-avatar-filter">
-      Avatars
-    </label>
-    
-    <select
-      id="competition-avatar-filter"
-      multiple
-      size="5"
-    >
-    </select>
-
-  <label for="competition-type-filter">
-    Competition types
+  <label for="competition-avatar-filter">
+    Select avatars to compare
   </label>
 
-  <select id="competition-type-filter" multiple size="5">
-    <!-- Populated by JavaScript -->
-  </select>
+  <select id="competition-avatar-filter" multiple size="5"></select>
 
-  <button
-    type="button"
-    id="display-competitions-button"
-  >
-    Display competitions
+  <button type="button" id="display-competitions-button">
+    Compare selected avatars
   </button>
 
-  <button
-    type="button"
-    id="clear-competition-filters"
-  >
-    Clear
-  </button>
-</div>
+  <p id="comparison-message" aria-live="polite"></p>
 
-<div id="entry-list">
-  <p>Select filters and click “Display competitions.”</p>
-</div>
+  <div class="chart-container">
+    <canvas id="points-chart"></canvas>
+  </div>
 
-    </section>
+  <h2>Competitions in this comparison</h2>
+  <div id="entry-list"></div>
+</section>
+
   </main>
 
   <script src="app.js"></script>
