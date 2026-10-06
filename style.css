@@ -652,6 +652,40 @@ button:disabled {
   margin: 0.5rem 0 1rem;
 }
 
+.comparison-filters,
+.comparison-actions {
+  display: flex;
+  align-items: flex-end;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.comparison-filters {
+  margin-bottom: 1rem;
+}
+
+.filter-field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+
+.filter-field select {
+  width: min(100%, 400px);
+}
+
+.comparison-actions button {
+  min-height: 2.5rem;
+  padding: 0.5rem 1rem;
+}
+
+@media (max-width: 480px) {
+  .comparison-actions button {
+    flex: 1;
+  }
+}
+
+
 
 
 
