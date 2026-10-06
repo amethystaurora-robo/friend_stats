@@ -712,6 +712,7 @@ button:disabled {
 }
 
 .comparison-actions button {
+  width: auto;
   min-height: 2.2rem;
   padding: 0.4rem 0.7rem;
   font-size: 0.9rem;
