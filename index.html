@@ -546,24 +546,27 @@
    <section id="competition-results">
   <h2>Compare avatars</h2>
 
-  <label for="competition-avatar-filter">
-    Select avatars to compare
-  </label>
+  <div class="comparison-filters">
+  <div class="filter-field">
+    <label for="competition-avatar-filter">Select avatars to compare</label>
+    <select id="competition-avatar-filter" multiple size="5"></select>
+  </div>
 
-  <select id="competition-avatar-filter" multiple size="5"></select>
+  <div class="filter-field">
+    <label for="competition-type-filter">Filter by competition type</label>
+    <select id="competition-type-filter" multiple size="5"></select>
+  </div>
+</div>
 
+<div class="comparison-actions">
   <button type="button" id="display-competitions-button">
     Compare selected avatars
   </button>
+  <button type="button" id="clear-competition-filters">
+    Clear filters
+  </button>
+</div>
 
-     <label for="competition-type-filter">
-  Filter by competition type
-</label>
-<select id="competition-type-filter" multiple size="5"></select>
-
-<button type="button" id="clear-competition-filters">
-  Clear filters
-</button>
 
 
   <p id="comparison-message" aria-live="polite"></p>
