@@ -685,6 +685,38 @@ button:disabled {
   }
 }
 
+.comparison-controls {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 1.5rem;
+  flex-wrap: wrap;
+}
+
+.comparison-filters,
+.comparison-actions {
+  display: flex;
+  align-items: flex-end;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.filter-field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+
+.comparison-actions {
+  gap: 0.75rem; /* space between the buttons */
+}
+
+.comparison-actions button {
+  min-height: 2.5rem;
+  padding: 0.5rem 1rem;
+}
+
+
 
 
 
