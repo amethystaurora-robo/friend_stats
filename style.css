@@ -645,6 +645,14 @@ button:disabled {
   margin: 0.75rem 0;
 }
 
+#competition-type-filter {
+  display: block;
+  width: min(100%, 400px);
+  min-height: 130px;
+  margin: 0.5rem 0 1rem;
+}
+
+
 
 
 
